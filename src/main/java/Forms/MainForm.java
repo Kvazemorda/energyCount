@@ -3,6 +3,7 @@ package Forms;
 import Forms.Object.Capacity.UnitCount.JournalCount.JournalAddNewCountOrValue;
 import Forms.Object.CapacityConnectToObject;
 import Forms.Object.ObjectAddNewOnPlace;
+import Forms.Owner.PlaneContract.PlaneContractAddNew;
 import Service.HibernateSessionFactory;
 import Service.UsersDAOImp;
 import javafx.application.Application;
@@ -39,11 +40,11 @@ public class MainForm extends Application{
     private Scene scene;
     private BorderPane borderPane;
     public TabPane tabPane;
-    private Tab tabReports, tabReportsCTVS, tabAddNewObject, tabConnectObjectByResource;
+    private Tab tabReports, tabReportsCTVS, tabAddNewObject, tabConnectObjectByResource, tabAddNewContract;
     private MenuBar menuBar;
-    private String reports, reportCTVS, addNewObject, connectObjectToResource;
+    private String reports, reportCTVS, addNewObject, connectObjectToResource, addNewContract;
     public static JournalAddNewCountOrValue journalAddNewCountOrValue;
-    private static TreeItem<String> treeReports, treeReportCTVS, treeItemAddNewObject, treeItemConnectObjByResource;
+    private static TreeItem<String> treeReports, treeReportCTVS, treeItemAddNewObject, treeItemConnectObjByResource, treeAddNewContract;
     private Map<TreeItem<String>, Tab> mapTabs;
     public static DatePicker datePicker;
 
@@ -59,16 +60,15 @@ public class MainForm extends Application{
             HibernateSessionFactory.shutdown();
         }
 
-        String s ="1. Сделать связь  \n " +
-                "2. Продумать логику по закрытию периода на перед или случаев корректировки показаний \n" +
-                " 2.2. Если есть показание следующие после вновь указанного, то проверить чтобы следующее \n" +
-                "изменяемого показание было больше текущего если норм, то записать иначе выдать ошибку \n" +
-                " 2.2.1 Если за текущую дату период счтается закрытым, то исправлять показание запрещено \n" +
-                " 2.2.2 Посчитать по среднему: Если закрываем показание на перед, добавить форму расчета по среднему. \n" +
+        String s = "1. Добавил форму добавления Собственника, контракта " +
+                "2. Добавить Combobox выбора собственника" +
+                "2. Решить как сделать общий баланс за текущий месяц \n" +
+                "3. Решить вопрос по сведению баланса в день, по РВСам и по дням когда добавляются по НПР \n" +
+                "4. Продумать логику по закрытию периода на перед или случаев корректировки показаний \n" +
+                "4.2.1 Если за текущую дату период счтается закрытым, то исправлять показание запрещено \n" +
+                "4.2.2 Посчитать по среднему: Если закрываем показание на перед, добавить форму расчета по среднему. \n" +
                 "Указываешь дату по какую необходимо посчитать и нажимаешь расчет. Вносятся средние показания за текущий месяц \n" +
                 "кроме налива воды контрагентам(по наливу воды указывается 0) \n" +
-                "" +
-
                 "3. Добавить кнопку на сохранение показаний всех узлов учета и проектных \n " +
                 "4. Добавить ДАО на сохранение данных в базе по показаниям узлов учета \n " +
                 "5. Добавить базу договоров и контрагентов \n" +
@@ -136,15 +136,18 @@ public class MainForm extends Application{
         treeReportCTVS = new TreeItem(tabReportsCTVS.getText());
         treeItemAddNewObject = new TreeItem(tabAddNewObject.getText());
         treeItemConnectObjByResource = new TreeItem(tabConnectObjectByResource.getText());
+        treeAddNewContract = new TreeItem(tabAddNewContract.getText());
         mapTabs = new HashMap<>();
         mapTabs.put(treeReports, tabReports);
         mapTabs.put(treeReportCTVS, tabReportsCTVS);
         mapTabs.put(treeItemAddNewObject, tabAddNewObject);
         mapTabs.put(treeItemConnectObjByResource, tabConnectObjectByResource);
+        mapTabs.put(treeAddNewContract, tabAddNewContract);
         treeReports.setExpanded(true);
         treeReports.getChildren().add(0,treeReportCTVS);
         treeReports.getChildren().add(1,treeItemAddNewObject);
         treeReports.getChildren().add(2,treeItemConnectObjByResource);
+        treeReports.getChildren().add(3,treeAddNewContract);
         final TreeView<TreeItem> treeView = new TreeView(treeReports);
         treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TreeItem>>() {
             @Override
@@ -179,11 +182,13 @@ public class MainForm extends Application{
         reports = "Отчеты";
         addNewObject = "Создать новый объект";
         connectObjectToResource = "Подкл./откл. ресурс к объекту";
+        addNewContract = "Добавить новый договор";
         tabPane = new TabPane();
         tabReports = new Tab(reports);
         tabReportsCTVS = new Tab(reportCTVS);
         tabConnectObjectByResource = new Tab(connectObjectToResource);
         tabAddNewObject = new Tab(addNewObject);
+        tabAddNewContract = new Tab(addNewContract);
         journalAddNewCountOrValue = new JournalAddNewCountOrValue();
         ObjectAddNewOnPlace objectAddNewOnPlace = new ObjectAddNewOnPlace();
         CapacityConnectToObject capacityConnectToObject = new CapacityConnectToObject();
@@ -191,6 +196,8 @@ public class MainForm extends Application{
         tabReportsCTVS.setContent(journalAddNewCountOrValue.createPane());
         tabAddNewObject.setContent(objectAddNewOnPlace.createBorderPane());
         tabConnectObjectByResource.setContent(capacityConnectToObject.createCapacityConnectToObject());
+        PlaneContractAddNew planeContractAddNew = new PlaneContractAddNew();
+        tabAddNewContract.setContent(planeContractAddNew.createTablePlaneContract());
         return tabPane;
     }
 

@@ -18,6 +18,10 @@ import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
 import java.util.List;
 
+/**
+ * Клас создает два BorderPane (Источник и Потребитель) с данными об узлах учета и с кнопкой
+ * подключения новых узлов учета.
+ */
 public class ObjectWithResourceConnected {
     private ObjectOnPlaceEntity objectOnPlaceEntity;
     private TypeResourceEntity typeResourceEntity = new TypeResourceEntity();
@@ -39,7 +43,7 @@ public class ObjectWithResourceConnected {
         this.objectOnPlaceEntity = objectOnPlaceEntity;
         addNewUnitCount();
     }
-
+    // Создается бордер узлов учета источника. В центре заполняется unitCountSourceBox
     public BorderPane createObjectWithResourceSource() {
         Label label = new Label(objectOnPlaceEntity.getName());
         label.setStyle("-fx-padding: 7px");
@@ -70,7 +74,7 @@ public class ObjectWithResourceConnected {
         objectBorderPane.setStyle(cssDefault);
         return objectBorderPane;
     }
-
+// unitCountSourceBox заполняется узлами учета если на текущую дату есть действующий акт ввода УУ
     public void createCapacitySourceConnectedByObject() {
         CapacityObjectDAOImpl capacityObjectDAO = new CapacityObjectDAOImpl();
         List<CapacitySourceObjectEntity> capacitySourceObjectEntitySet = capacityObjectDAO.getCapacityResourceConnectedToObjectSource(objectOnPlaceEntity, typeResourceEntity);
@@ -78,7 +82,6 @@ public class ObjectWithResourceConnected {
             capacitySourceConnect = true;
         }
         for (CapacitySourceObjectEntity capacitySourceObjectEntity : capacitySourceObjectEntitySet) {
-            System.out.println(capacitySourceObjectEntity.toString());
             ActInstallUnitCountDAOImp actInstallUnitCountDAOImp = new ActInstallUnitCountDAOImp();
             ActInstallCountEntity actInstallCountEntity = actInstallUnitCountDAOImp.getActInstallCount(capacitySourceObjectEntity);
             ValueResourceWithUnitCount unitCountItem = new ValueResourceWithUnitCount(capacitySourceObjectEntity);
@@ -110,9 +113,11 @@ public class ObjectWithResourceConnected {
             if (actInstallCountEntity != null){
                 unitCountItem.setUnitCountEntity(actInstallCountEntity.getUnitCountByUnitCount());
                 unitCountConsumerBox.getChildren().add(unitCountItem.createPaneUnitCount());
+                JournalAddNewCountOrValue.valueUnitCount.add(unitCountItem);
             }else{
                 ValueResourceWithoutUnitCount valueResourceWithoutUnitCount = new ValueResourceWithoutUnitCount(capacitySourceObjectEntity);
                 unitCountConsumerBox.getChildren().add(valueResourceWithoutUnitCount.createForm());
+                JournalAddNewCountOrValue.valueOtherMethod.add(valueResourceWithoutUnitCount);
             }
         }
     }

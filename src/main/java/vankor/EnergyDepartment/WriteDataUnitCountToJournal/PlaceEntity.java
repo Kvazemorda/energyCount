@@ -59,7 +59,7 @@ public class PlaceEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "placeByPlace", cascade = CascadeType.ALL)
     public Set<ObjectOnPlaceEntity> getObjectOnPlacesById() {
         return objectOnPlacesById;
     }

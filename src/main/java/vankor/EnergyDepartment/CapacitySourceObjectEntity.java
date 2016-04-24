@@ -1,6 +1,8 @@
 package vankor.EnergyDepartment;
 
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity;
+import vankor.EnergyDepartment.Owner.ContractEntity;
+import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalOtherMethodEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
 import javax.persistence.*;
@@ -14,16 +16,20 @@ public class CapacitySourceObjectEntity implements Comparable {
     private double capacity;
     private TypeResourceEntity typeResourceEntity;
     private Set<ActInstallCountEntity> actInstallCountEntities;
+    private Set<JournalOtherMethodEntity> journalOtherMethodEntities;
     private Boolean source;
     private Boolean consumer;
     private ObjectOnPlaceEntity objectOnPlaceEntity;
     private Date dateInstall, dateUnInstall;
     private String description;
+    private ContractEntity contractEntity;
 
     public CapacitySourceObjectEntity() {
     }
 
-    public CapacitySourceObjectEntity(double capacity, TypeResourceEntity typeResourceEntity, Boolean source, Boolean consumer, ObjectOnPlaceEntity objectOnPlaceEntity, Date dateInstall, String description) {
+    public CapacitySourceObjectEntity(double capacity, TypeResourceEntity typeResourceEntity, Boolean source,
+                                      Boolean consumer, ObjectOnPlaceEntity objectOnPlaceEntity, Date dateInstall,
+                                      String description) {
         this.capacity = capacity;
         this.typeResourceEntity = typeResourceEntity;
         this.source = source;
@@ -63,6 +69,7 @@ public class CapacitySourceObjectEntity implements Comparable {
     public void setSource(Boolean source) {
         this.source = source;
     }
+
     @Basic
     @Column(name = "Consumer")
     public Boolean getConsumer() {
@@ -123,6 +130,16 @@ public class CapacitySourceObjectEntity implements Comparable {
         this.typeResourceEntity = typeResourceEntity;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "Contract1", referencedColumnName = "ID", nullable = false)
+    public ContractEntity getContractEntity() {
+        return contractEntity;
+    }
+
+    public void setContractEntity(ContractEntity contractEntity) {
+        this.contractEntity = contractEntity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -131,14 +148,17 @@ public class CapacitySourceObjectEntity implements Comparable {
         CapacitySourceObjectEntity that = (CapacitySourceObjectEntity) o;
 
         if (Double.compare(that.capacity, capacity) != 0) return false;
-        if (id != that.id) return false;
         if (actInstallCountEntities != null ? !actInstallCountEntities.equals(that.actInstallCountEntities) : that.actInstallCountEntities != null)
             return false;
         if (consumer != null ? !consumer.equals(that.consumer) : that.consumer != null) return false;
+        if (contractEntity != null ? !contractEntity.equals(that.contractEntity) : that.contractEntity != null)
+            return false;
         if (dateInstall != null ? !dateInstall.equals(that.dateInstall) : that.dateInstall != null) return false;
         if (dateUnInstall != null ? !dateUnInstall.equals(that.dateUnInstall) : that.dateUnInstall != null)
             return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (journalOtherMethodEntities != null ? !journalOtherMethodEntities.equals(that.journalOtherMethodEntities) : that.journalOtherMethodEntities != null)
+            return false;
         if (objectOnPlaceEntity != null ? !objectOnPlaceEntity.equals(that.objectOnPlaceEntity) : that.objectOnPlaceEntity != null)
             return false;
         if (source != null ? !source.equals(that.source) : that.source != null) return false;
@@ -152,28 +172,29 @@ public class CapacitySourceObjectEntity implements Comparable {
     public int hashCode() {
         int result;
         long temp;
-        result = id;
         temp = Double.doubleToLongBits(capacity);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = (int) (temp ^ (temp >>> 32));
         result = 31 * result + (typeResourceEntity != null ? typeResourceEntity.hashCode() : 0);
         result = 31 * result + (actInstallCountEntities != null ? actInstallCountEntities.hashCode() : 0);
+        result = 31 * result + (journalOtherMethodEntities != null ? journalOtherMethodEntities.hashCode() : 0);
         result = 31 * result + (source != null ? source.hashCode() : 0);
         result = 31 * result + (consumer != null ? consumer.hashCode() : 0);
         result = 31 * result + (objectOnPlaceEntity != null ? objectOnPlaceEntity.hashCode() : 0);
         result = 31 * result + (dateInstall != null ? dateInstall.hashCode() : 0);
         result = 31 * result + (dateUnInstall != null ? dateUnInstall.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (contractEntity != null ? contractEntity.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        if(source == true){
+        if (source == true) {
             return typeResourceEntity.getName() +
-                    " источн., мощн. - " + capacity;
-        }else{
+                    " истч., мощн. - " + capacity + " " + description;
+        } else {
             return typeResourceEntity.getName() +
-                    " потребит., мощн. - " + capacity;
+                    " потрб., мощн. - " + capacity + " " + description;
         }
     }
 
@@ -191,5 +212,14 @@ public class CapacitySourceObjectEntity implements Comparable {
 
     public void setActInstallCountEntities(Set<ActInstallCountEntity> actInstallCountEntities) {
         this.actInstallCountEntities = actInstallCountEntities;
+    }
+
+    @OneToMany(mappedBy = "capacitySourceObjectEntity", cascade = CascadeType.ALL)
+    public Set<JournalOtherMethodEntity> getJournalOtherMethodEntities() {
+        return journalOtherMethodEntities;
+    }
+
+    public void setJournalOtherMethodEntities(Set<JournalOtherMethodEntity> journalOtherMethodEntities) {
+        this.journalOtherMethodEntities = journalOtherMethodEntities;
     }
 }

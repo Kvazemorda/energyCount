@@ -1,5 +1,6 @@
 package Forms.Object.Capacity;
 
+import Service.CapacityObjectDAOImpl;
 import Service.TypeResourceDAOImpl;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -9,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import vankor.EnergyDepartment.CapacitySourceObjectEntity;
+import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
 import java.util.ArrayList;
@@ -20,10 +23,14 @@ import java.util.ArrayList;
 public class CapacityCreateNew {
 
     private ComboBox<TypeResourceEntity> typeResourceEntityComboBox;
+    private ComboBox<CapacitySourceObjectEntity> capacitySourceObjectEntityComboBox;
     private TextField capacityTextField, TFDescription;
     private CheckBox checkBoxSource, checkBoxConsumer;
-    private Label labelTypeResource, labelCapacity, labelSource, labelConsumer, labelDescription;
     private GridPane gridPane;
+    private Label labelTypeResource, labelCapacity, labelSource, labelConsumer, labelDescription;
+    private TypeResourceEntity typeResourceEntity;
+    private PlaceEntity placeEntity;
+
 
     public GridPane createFormAddTypeCapacityToObject(){
         capacityTextField = new TextField();
@@ -40,7 +47,6 @@ public class CapacityCreateNew {
         labelDescription = new Label("Описание");
         labelSource = new Label("Источник");
         labelConsumer = new Label("Потребитель");
-
         gridPane = new GridPane();
         gridPane.add(labelTypeResource,0,0);
         gridPane.add(labelCapacity,1,0);
@@ -59,14 +65,19 @@ public class CapacityCreateNew {
 
     public ComboBox<TypeResourceEntity> createComboBoxResource(){
         typeResourceEntityComboBox = new ComboBox<>();
+        typeResourceEntity = new TypeResourceEntity();
         final TypeResourceDAOImpl typeResourceDAO = new TypeResourceDAOImpl();
         ArrayList<TypeResourceEntity> listTypeResource = (ArrayList) typeResourceDAO.findAllTypeResource();
         typeResourceEntityComboBox.setItems(FXCollections.observableArrayList(listTypeResource));
         return typeResourceEntityComboBox;
     }
 
-    private void connectNewResource(){
-
+    public ComboBox<CapacitySourceObjectEntity> createComboBoxCapacity(PlaceEntity placeEntity, TypeResourceEntity typeResourceEntity){
+        CapacityObjectDAOImpl capacityObjectDAO = new CapacityObjectDAOImpl();
+        ArrayList<CapacitySourceObjectEntity> capacitySourceObjectEntities = (ArrayList) capacityObjectDAO.getCapacityOnPlaceConnectedResource(placeEntity, typeResourceEntity);
+        capacitySourceObjectEntityComboBox = new ComboBox<>();
+        capacitySourceObjectEntityComboBox.setItems(FXCollections.observableArrayList(capacitySourceObjectEntities));
+        return capacitySourceObjectEntityComboBox;
     }
 
     public CheckBox getCheckBoxConsumer() {
@@ -115,5 +126,21 @@ public class CapacityCreateNew {
 
     public void setTFDescription(TextField TFDescription) {
         this.TFDescription = TFDescription;
+    }
+
+    public TypeResourceEntity getTypeResourceEntity() {
+        return typeResourceEntity;
+    }
+
+    public void setTypeResourceEntity(TypeResourceEntity typeResourceEntity) {
+        this.typeResourceEntity = typeResourceEntity;
+    }
+
+    public PlaceEntity getPlaceEntity() {
+        return placeEntity;
+    }
+
+    public void setPlaceEntity(PlaceEntity placeEntity) {
+        this.placeEntity = placeEntity;
     }
 }

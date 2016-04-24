@@ -1,5 +1,6 @@
 package Forms.Object.Capacity.UnitCount.JournalCount;
 
+import Forms.MainForm;
 import Forms.Service.DialogWindow;
 import Service.Exception.HoursWorkException;
 import javafx.geometry.Pos;
@@ -8,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
+import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalOtherMethodEntity;
 
 /**
  * Создает формы с мощностью по наработке для объектов без узлов учета
@@ -20,6 +22,7 @@ public class ValueResourceWithoutUnitCount {
     private Label labelValueOfPeriod, labelDescription;
     private double workHours;
     public boolean source = false;
+    private JournalOtherMethodEntity journalOtherMethodEntityCurrent;
 
     public ValueResourceWithoutUnitCount(CapacitySourceObjectEntity capacitySourceObjectEntity) {
         this.capacitySourceObjectEntity = capacitySourceObjectEntity;
@@ -41,7 +44,7 @@ public class ValueResourceWithoutUnitCount {
         hBox3 = new HBox(new Label("итого объем: "), labelValueOfPeriod);
         hBox2 = new HBox(new Label("Работал "), tfWorkHours, new Label(" ч. "), hBox3);
         hBox2.setStyle("-fx-padding: 5");
-
+        journalOtherMethodEntityCurrent = new JournalOtherMethodEntity(MainForm.currentDate, workHours, valueOfPeriod, capacitySourceObjectEntity);
         VBox vBox = new VBox(labelDescription, hBox1, hBox2);
         vBox.setStyle("-fx-font-smoothing-type: #d6d6d6");
         vBox.setStyle("-fx-padding: 6");
@@ -84,6 +87,9 @@ public class ValueResourceWithoutUnitCount {
                     ValueResourceWithUnitCount.balanceResource = ValueResourceWithUnitCount.countValueSource - ValueResourceWithUnitCount.countValueConsumer;
                     JournalAddNewCountOrValue.labelBalanceResource.setText(String.valueOf(ValueResourceWithUnitCount.balanceResource));
                 }
+                journalOtherMethodEntityCurrent.setTimeWork(workHours);
+                journalOtherMethodEntityCurrent.setValue(valueOfPeriod);
+                journalOtherMethodEntityCurrent.setDate(MainForm.currentDate);
             }
             catch (NumberFormatException e){
                 tfWorkHours.setText("24");
@@ -98,4 +104,39 @@ public class ValueResourceWithoutUnitCount {
             }
         });
     }
+
+    public JournalOtherMethodEntity getJournalOtherMethodEntityCurrent() {
+        return journalOtherMethodEntityCurrent;
+    }
+
+    public void setJournalOtherMethodEntityCurrent(JournalOtherMethodEntity journalOtherMethodEntityCurrent) {
+        this.journalOtherMethodEntityCurrent = journalOtherMethodEntityCurrent;
+    }
+
+    public CapacitySourceObjectEntity getCapacitySourceObjectEntity() {
+        return capacitySourceObjectEntity;
+    }
+
+    public void setCapacitySourceObjectEntity(CapacitySourceObjectEntity capacitySourceObjectEntity) {
+        this.capacitySourceObjectEntity = capacitySourceObjectEntity;
+    }
+
+    public double getWorkHours() {
+        return workHours;
+    }
+
+    public void setWorkHours(double workHours) {
+        this.workHours = workHours;
+    }
+
+    public double getValueOfPeriod() {
+        return valueOfPeriod;
+    }
+
+    public void setValueOfPeriod(double valueOfPeriod) {
+        this.valueOfPeriod = valueOfPeriod;
+    }
+
+
 }
+

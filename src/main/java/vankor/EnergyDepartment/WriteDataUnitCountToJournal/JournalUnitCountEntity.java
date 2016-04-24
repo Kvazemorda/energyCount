@@ -86,12 +86,23 @@ public class JournalUnitCountEntity implements Comparable {
     }
 
     @ManyToOne
-    @JoinColumn(name = "ActInstallCount", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "ActInstallCount", referencedColumnName = "ID", nullable = false)
     public ActInstallCountEntity getActInstallCountEntity() {
         return actInstallCountEntity;
     }
 
     public void setActInstallCountEntity(ActInstallCountEntity actInstallCountEntity) {
         this.actInstallCountEntity = actInstallCountEntity;
+    }
+
+    @Override
+    public String toString() {
+        return "JournalUnitCountEntity{" +
+                "id=" + id +
+                ", countUnit=" + countUnit +
+                ", value=" + value +
+                ", dateCount=" + dateCount +
+                ", actInstallCountEntity=" + actInstallCountEntity +
+                '}';
     }
 }

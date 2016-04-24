@@ -169,7 +169,7 @@ public class ActInstallCountEntity implements Comparable{
     }
 
     @ManyToOne
-    @JoinColumn(name = "Capacity", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "Capacity", referencedColumnName = "ID", nullable = false)
     public CapacitySourceObjectEntity getCapacitySourceObjectEntity() {
         return capacitySourceObjectEntity;
     }

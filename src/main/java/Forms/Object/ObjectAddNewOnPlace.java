@@ -57,7 +57,7 @@ public class ObjectAddNewOnPlace {
         gridPaneAddNewObject.add(placeLabel, 0, 0);
         gridPaneAddNewObject.add(nameObject, 1, 0);
         gridPaneAddNewObject.add(placeOnMap, 2, 0);
-        gridPaneAddNewObject.add(createComboBoxTypeResource(), 0, 1);
+        gridPaneAddNewObject.add(createComboBoxPlace(), 0, 1);
         gridPaneAddNewObject.add(tNameObject, 1, 1);
         gridPaneAddNewObject.add(tPlaceOnMap, 2, 1);
         addNewObject();
@@ -170,7 +170,11 @@ public class ObjectAddNewOnPlace {
         });
     }
 
-    private ComboBox<PlaceEntity> createComboBoxTypeResource() {
+    /**
+     * Создается комбобокс площадок
+     * @return ComboBox<PlaceEntity>
+     */
+    private ComboBox<PlaceEntity> createComboBoxPlace() {
         PlaceDAOImpl placeDAO = new PlaceDAOImpl();
         placeDAO.setSession(MainForm.session);
         final ArrayList<PlaceEntity> placeEntities = (ArrayList) placeDAO.findALLPlace();
@@ -197,11 +201,11 @@ public class ObjectAddNewOnPlace {
     public GridPane createGridPane() {
         gridPane.getChildren().add(createFormAddNewObject());
         gridPane.setStyle(gridPaneCSS);
-        connectResourceByEquipment();
+        connectResourceToCapacity();
         return gridPane;
     }
 
-    public void connectResourceByEquipment(){
+    public void connectResourceToCapacity(){
         formAddTypeResourceToEquipmentMap = new HashMap<>();
         boxAddTypeResourceToEquipment = new VBox();
         paneFormAddTypeResourceToEquipment.add(boxAddTypeResourceToEquipment, 0, 0);

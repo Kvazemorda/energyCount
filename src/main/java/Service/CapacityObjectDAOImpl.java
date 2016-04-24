@@ -4,11 +4,25 @@ import Forms.MainForm;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
+import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
 import java.util.List;
 
 public class CapacityObjectDAOImpl {
+
+    public List<CapacitySourceObjectEntity> getCapacityOnPlaceConnectedResource(PlaceEntity placeEntity, TypeResourceEntity typeResourceEntity){
+        String hql = "select capacity from CapacitySourceObjectEntity capacity " +
+                "where capacity.typeResourceEntity = :resource " +
+                "and  capacity.objectOnPlaceEntity = (select objectOnPlace from ObjectOnPlaceEntity objectOnPlace " +
+                "where objectOnPlace.placeByPlace = :place)";
+
+        Query query = MainForm.session.createQuery(hql);
+        query.setParameter("place", placeEntity);
+        query.setParameter("resource", typeResourceEntity);
+        List<CapacitySourceObjectEntity> capacitySourceObjectEntities = (List) query.list();
+        return capacitySourceObjectEntities;
+    }
 
     public List<CapacitySourceObjectEntity> getCapacityConnectedToObject(ObjectOnPlaceEntity objectOnPlaceEntity){
         String hql = "select capacityResource from CapacitySourceObjectEntity  capacityResource " +

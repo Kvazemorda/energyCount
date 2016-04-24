@@ -292,6 +292,7 @@ public class CapacityConnectToObject {
                     DialogWindow dialogWindow = new DialogWindow(message);
                 } catch (Exception e) {
                     System.out.println(e);
+                    e.printStackTrace();
                     String message = "Укажи объект к которму добавляешь ресурс ";
                     DialogWindow dialogWindow = new DialogWindow(message);
                 }

@@ -2,7 +2,7 @@ package Forms.Object.Capacity.UnitCount.JournalCount;
 
 import Forms.MainForm;
 import Forms.Object.ObjectWithResourceConnected;
-import Forms.Service.DialogWindow;
+import Service.JournalOtherMethodDAOImpl;
 import Service.JournalUnitCountDAOImpl;
 import Service.ObjectOnPlaceDAOImpl;
 import Service.PlaceDAOImpl;
@@ -16,7 +16,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
-import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalUnitCountEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
@@ -50,7 +49,7 @@ public class JournalAddNewCountOrValue {
         borderPane.setCenter(centerGridPane());
         borderPane.setBottom(vBoxBalance);
         borderPane.setAlignment(vBoxBalance, Pos.BOTTOM_CENTER);
-        buttonAddNewCountListener();
+        changeDate();
         return borderPane;
     }
 
@@ -116,6 +115,7 @@ public class JournalAddNewCountOrValue {
 
     //создаем формы объектов с узлами учета и без них, размещаем их в центре
     public void createObjectOnPlaceForm() {
+        buttonAddNewCountListener();
         valueOtherMethod = new HashSet<>();
         valueUnitCount = new HashSet<>();
         valueOtherMethod.clear();
@@ -130,9 +130,11 @@ public class JournalAddNewCountOrValue {
         boxConsumer.getChildren().clear();
         boxConsumer.getChildren().add(createTitleConsumer());
         ObjectOnPlaceDAOImpl objectOnPlaceDAO = new ObjectOnPlaceDAOImpl();
+        //Выбираю лист объектов подключенных к мощностям
         List<ObjectOnPlaceEntity> objectOnPlaceEntities = objectOnPlaceDAO.getObjectOnPlaceConnectedResource(placeEntity);
         for(ObjectOnPlaceEntity objectOnPlaceEntity: objectOnPlaceEntities) {
             ObjectWithResourceConnected objectWithResourceConnected = new ObjectWithResourceConnected(typeResourceEntity, objectOnPlaceEntity);
+
             borderPaneSource = objectWithResourceConnected.createObjectWithResourceSource();
             if (objectWithResourceConnected.capacitySourceConnect == true){
                 boxSource.getChildren().add(borderPaneSource);
@@ -174,36 +176,16 @@ public class JournalAddNewCountOrValue {
     }
     private void buttonAddNewCountListener(){
         buttonAddNewCount.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
-            double nextCount = 0;
-            int countWrite = 0;
-            int valueSize = 0;
             JournalUnitCountDAOImpl journalUnitCountDAO = new JournalUnitCountDAOImpl();
-            for(ValueResourceWithUnitCount value: valueUnitCount){
-                valueSize = valueUnitCount.size();
-                try{
-                    nextCount = journalUnitCountDAO.getNextCount(value.getJournalUnitCountEntity(),value.currentCountDouble);
-                    if(value.currentCountDouble > nextCount){
-                        DialogWindow dialogWindow = new DialogWindow("Показание УУ " + value.getUnitCountEntity().getNumber() +" больше следующиего.\n" +
-                                "Показание текущее должно быть меньше следующего. \n" +
-                                "Измени текущее или измени слещующее показание");
-                    }else{
-                        JournalUnitCountEntity journalUnitCountEntity =  journalUnitCountDAO.getCurrentJournal(value.getActInstallCountEntity());
-                        journalUnitCountEntity.setCountUnit(value.currentCountDouble);
-                        journalUnitCountEntity.setValue(value.getValue());
-                        journalUnitCountDAO.updateCountToJournal(journalUnitCountEntity);
-                        countWrite++;
-                    }
+            journalUnitCountDAO.writeCountToJournal(valueUnitCount);
+            JournalOtherMethodDAOImpl journalOtherMethodDAO = new JournalOtherMethodDAOImpl();
+            journalOtherMethodDAO.writeValueToJournal(valueOtherMethod);
 
-                }
-                catch (NullPointerException e){
-                    System.out.println(e + " to class JournalAddNewCountOrValue");
-                    JournalUnitCountEntity journalUnitCountEntity = new JournalUnitCountEntity(value.currentCountDouble,
-                            MainForm.currentDate, value.getActInstallCountEntity(), value.getValue());
-                    journalUnitCountDAO.writeCountToJournal(journalUnitCountEntity);
-                    countWrite++;
-                }
-            }
-            DialogWindow dialogWindow = new DialogWindow("Записано " + countWrite + " показаний узлов учета из " + valueSize);
+        });
+    }
+    public void changeDate(){
+        MainForm.datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            createObjectOnPlaceForm();
         });
     }
 }

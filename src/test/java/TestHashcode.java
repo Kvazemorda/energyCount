@@ -1,3 +1,4 @@
+
 public class TestHashcode {
 
     public static void main(String[] args) {

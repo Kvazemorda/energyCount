@@ -22,6 +22,10 @@
       <mapping class="vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity"/>
       <mapping class="vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalOtherMethodEntity"/>
       <mapping class="vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity"/>
+      <mapping class="vankor.EnergyDepartment.Owner.ContractEntity"/>
+      <mapping class="vankor.EnergyDepartment.Owner.LegalFormEntity"/>
+      <mapping class="vankor.EnergyDepartment.Owner.OwnerEntity"/>
+      <mapping class="vankor.EnergyDepartment.Owner.PlaneContractValueEntity"/>
       <mapping class="vankor.EnergyDepartment.CapacitySourceObjectEntity"/>
 
   </session-factory>
