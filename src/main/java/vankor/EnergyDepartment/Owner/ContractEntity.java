@@ -1,6 +1,7 @@
 package vankor.EnergyDepartment.Owner;
 
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ public class ContractEntity {
     private String contract;
     private OwnerEntity ownerEntity;
     private Set<CapacitySourceObjectEntity> capacitySourceObjectEntities;
+    private Set<PlaneContractValueEntity> planeContractValueEntitySet;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +48,37 @@ public class ContractEntity {
     }
     public void setCapacitySourceObjectEntities(Set<CapacitySourceObjectEntity> capacitySourceObjectEntities) {
         this.capacitySourceObjectEntities = capacitySourceObjectEntities;
+    }
+    @OneToMany(mappedBy = "contractEntity", cascade = CascadeType.ALL)
+    public Set<PlaneContractValueEntity> getPlaneContractValueEntitySet() {
+        return planeContractValueEntitySet;
+    }
+
+    public void setPlaneContractValueEntitySet(Set<PlaneContractValueEntity> planeContractValueEntitySet) {
+        this.planeContractValueEntitySet = planeContractValueEntitySet;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ContractEntity)) return false;
+
+        ContractEntity that = (ContractEntity) o;
+
+        if (capacitySourceObjectEntities != null ? !capacitySourceObjectEntities.equals(that.capacitySourceObjectEntities) : that.capacitySourceObjectEntities != null)
+            return false;
+        if (contract != null ? !contract.equals(that.contract) : that.contract != null) return false;
+        if (ownerEntity != null ? !ownerEntity.equals(that.ownerEntity) : that.ownerEntity != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = contract != null ? contract.hashCode() : 0;
+        result = 31 * result + (ownerEntity != null ? ownerEntity.hashCode() : 0);
+        result = 31 * result + (capacitySourceObjectEntities != null ? capacitySourceObjectEntities.hashCode() : 0);
+        return result;
     }
 
     @Override

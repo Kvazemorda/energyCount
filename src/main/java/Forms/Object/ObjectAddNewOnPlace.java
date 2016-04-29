@@ -1,8 +1,8 @@
 package Forms.Object;
 
-import Forms.Service.DialogWindow;
 import Forms.MainForm;
 import Forms.Object.Capacity.CapacityCreateNew;
+import Forms.Service.DialogWindow;
 import Service.CapacityObjectDAOImpl;
 import Service.Exception.DoubleSourceConsumerException;
 import Service.ObjectOnPlaceDAOImpl;
@@ -44,6 +44,7 @@ public class ObjectAddNewOnPlace {
     private Button bAddObject;
     private PlaceEntity placeEntity;
     private ComboBox comboBox;
+
 
     public GridPane createFormAddNewObject() {
         String cssLabel = "-fx-padding: 3px,3px,0px,3px;";
@@ -281,5 +282,6 @@ public class ObjectAddNewOnPlace {
     public ComboBox getComboBox() {
         return comboBox;
     }
+
 }
 

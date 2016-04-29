@@ -3,6 +3,8 @@ package vankor.EnergyDepartment.Owner;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "planecontractvalue")
 public class PlaneContractValueEntity {
     int id;
     double value;
@@ -46,6 +48,7 @@ public class PlaneContractValueEntity {
     public void setDateStart(Date dateStart) {
         this.dateStart = dateStart;
     }
+
     @Temporal(TemporalType.DATE)
     @Column(name = "DateEnd", nullable = false, insertable = true, updatable = true)
     public Date getDateEnd() {
@@ -57,7 +60,7 @@ public class PlaneContractValueEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "contractEntity", referencedColumnName = "id")
+    @JoinColumn(name = "contract", referencedColumnName = "id")
     public ContractEntity getContractEntity() {
         return contractEntity;
     }

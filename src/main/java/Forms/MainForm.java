@@ -3,7 +3,7 @@ package Forms;
 import Forms.Object.Capacity.UnitCount.JournalCount.JournalAddNewCountOrValue;
 import Forms.Object.CapacityConnectToObject;
 import Forms.Object.ObjectAddNewOnPlace;
-import Forms.Owner.PlaneContract.PlaneContractAddNew;
+import Forms.Owner.ContractAddNew;
 import Service.HibernateSessionFactory;
 import Service.UsersDAOImp;
 import javafx.application.Application;
@@ -60,8 +60,9 @@ public class MainForm extends Application{
             HibernateSessionFactory.shutdown();
         }
 
-        String s = "1. Добавил форму добавления Собственника, контракта " +
-                "2. Добавить Combobox выбора собственника" +
+        String s = "1. Добавить datepicker в таблицу и поле для ввода тексат \n" +
+                "Добавиить форму добавления Собственника, контракта \n" +
+                "2. Добавить Combobox выбора собственника \n" +
                 "2. Решить как сделать общий баланс за текущий месяц \n" +
                 "3. Решить вопрос по сведению баланса в день, по РВСам и по дням когда добавляются по НПР \n" +
                 "4. Продумать логику по закрытию периода на перед или случаев корректировки показаний \n" +
@@ -196,8 +197,8 @@ public class MainForm extends Application{
         tabReportsCTVS.setContent(journalAddNewCountOrValue.createPane());
         tabAddNewObject.setContent(objectAddNewOnPlace.createBorderPane());
         tabConnectObjectByResource.setContent(capacityConnectToObject.createCapacityConnectToObject());
-        PlaneContractAddNew planeContractAddNew = new PlaneContractAddNew();
-        tabAddNewContract.setContent(planeContractAddNew.createTablePlaneContract());
+        ContractAddNew contractAddNew = new ContractAddNew();
+        tabAddNewContract.setContent(contractAddNew.getBorderPaneBasicForm());
         return tabPane;
     }
 

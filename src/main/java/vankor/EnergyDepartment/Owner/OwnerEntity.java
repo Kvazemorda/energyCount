@@ -106,4 +106,9 @@ public class OwnerEntity {
         result = 31 * result + (legalFormEntity != null ? legalFormEntity.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
