@@ -1,6 +1,8 @@
 package Forms.Owner;
 
+import Forms.Service.DialogWindow;
 import Service.LegalDAOImpl;
+import Service.OwnerDAOImpl;
 import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vankor.EnergyDepartment.Owner.LegalFormEntity;
+import vankor.EnergyDepartment.Owner.OwnerEntity;
 
 
 public class OwnerAddNew {
@@ -21,17 +24,20 @@ public class OwnerAddNew {
     public Stage stage;
     private BorderPane borderPane;
     public VBox baseLayoutVBox;
-    private Label nameLabel = new Label("Имя контрагента"),
-    fullNameLabel = new Label("Полное имя контрагента"),
+    private Label
+            titleLabel = new Label("Добавление нового потребителя"),
+            nameLabel = new Label("Имя потребителя"),
+            fullNameLabel = new Label("Полное имя потребителя"),
             innLabel = new Label("ИНН/"),
             kppLabel = new Label("КПП"),
             legalFormLabel = new Label("Юридическая форма");
-    ComboBox<LegalFormEntity> legalFormEntityComboBox;
+    static ComboBox<LegalFormEntity> legalFormEntityComboBox;
     Button addNewLegalFormButton, commitNewOwnerButton;
     private TextField nameTF, fullNameTF, innTF, kppTF;
-    private LegalFormEntity legalFormEntity;
+    private static LegalFormEntity legalFormEntity;
 
     public OwnerAddNew() {
+        titleLabel.setStyle("-fx-font-size: 16; -fx-padding: 10");
         nameTF = new TextField();
         fullNameTF = new TextField();
         innTF = new TextField();
@@ -41,26 +47,64 @@ public class OwnerAddNew {
         legalFormEntityComboBox = new ComboBox<>();
         setLegalFormEntityComboBox();
         addNewLegalFormButton = new Button("Добавить новую форму");
+        clickAddNewLegalForm();
         HBox hBoxComboBox = new HBox(legalFormEntityComboBox, addNewLegalFormButton);
         commitNewOwnerButton = new Button("Сохранить контрагента");
         commitNewOwnerButton.setStyle("-fx-padding: 15; -fx-font-size: 15");
-        baseLayoutVBox = new VBox(nameLabel, nameTF, hBoxLabel,hBoxTF,legalFormLabel,hBoxComboBox, commitNewOwnerButton);
+        clickCommitNewOwnerButton();
+        baseLayoutVBox = new VBox(nameLabel, nameTF, fullNameLabel, fullNameTF, hBoxLabel,hBoxTF,legalFormLabel,hBoxComboBox, commitNewOwnerButton);
         baseLayoutVBox.setSpacing(10);
         baseLayoutVBox.setStyle("-fx-padding: 10");
         borderPane = new BorderPane();
+        borderPane.setTop(titleLabel);
         borderPane.setCenter(baseLayoutVBox);
         group = new Group(borderPane);
-        scene = new Scene(group, 400, 310);
+        scene = new Scene(group, 320, 365);
         stage = new Stage();
         stage.setScene(scene);
         stage.show();
     }
 
-    private void setLegalFormEntityComboBox(){
+    public static void setLegalFormEntityComboBox(){
         LegalDAOImpl legalDAO = new LegalDAOImpl();
         legalFormEntityComboBox.setItems(FXCollections.observableArrayList(legalDAO.getAllLegalForm()));
         legalFormEntityComboBox.onActionProperty().setValue(event -> {
             legalFormEntity = legalFormEntityComboBox.getSelectionModel().getSelectedItem();
+        });
+    }
+    private void clickCommitNewOwnerButton(){
+        commitNewOwnerButton.onMouseClickedProperty().setValue(v ->{
+            if(!nameTF.getText().isEmpty()){
+                if(!fullNameTF.getText().isEmpty()){
+                    if(!innTF.getText().isEmpty() && !kppTF.getText().isEmpty()){
+                        if(legalFormEntity != null){
+                            OwnerEntity ownerEntity = new OwnerEntity();
+                                ownerEntity.setName(nameTF.getText());
+                                ownerEntity.setFullName(fullNameTF.getText());
+                                ownerEntity.setInn(innTF.getText());
+                                ownerEntity.setKpp(kppTF.getText());
+                                ownerEntity.setLegalFormEntity(legalFormEntity);
+                            OwnerDAOImpl ownerDAO = new OwnerDAOImpl();
+                            ownerDAO.saveOwner(ownerEntity);
+                            ContractAddNew.setOwnerEntityComboBox();
+                        }else {
+                            DialogWindow dialogWindow = new DialogWindow("Укажи юридическую форму");
+                        }
+                    }else{
+                        DialogWindow dialogWindow = new DialogWindow("Укажи ИНН и КПП");
+                    }
+                }else {
+                    DialogWindow dialogWindow = new DialogWindow("Укажи полное имя потребитял");
+                }
+            }else{
+                DialogWindow dialogWindow = new DialogWindow("Укажи имя потребителя");
+            }
+        });
+    }
+
+    private void clickAddNewLegalForm(){
+        addNewLegalFormButton.onMouseClickedProperty().setValue(v ->{
+            LegalFormAddNew legalFormAddNew = new LegalFormAddNew();
         });
     }
 }

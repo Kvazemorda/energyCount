@@ -72,19 +72,23 @@ public class CapacityObjectDAOImpl {
     }
 
         public List<CapacitySourceObjectEntity> getCapacityWithoutUnitCount(ObjectOnPlaceEntity objectOnPlaceEntity, TypeResourceEntity typeResourceEntity){
-        String hql = "select distinct capacityResource from CapacitySourceObjectEntity  capacityResource, ActInstallCountEntity act " +
-                "where capacityResource.objectOnPlaceEntity = :objectOnPlace " +
+        String hql = "select distinct capacityResource from CapacitySourceObjectEntity  capacityResource, ActInstallCountEntity act" +
+                " where capacityResource.objectOnPlaceEntity = :objectOnPlace " +
                 "and capacityResource.dateInstall <= :today " +
-                "and (capacityResource.dateUnInstall > :today or capacityResource.dateUnInstall is null) " +
+                "and (capacityResource.dateUnInstall > :today " +
+                "or capacityResource.dateUnInstall is null) " +
                 "and capacityResource.typeResourceEntity = :typeResource " +
-                "and (capacityResource.actInstallCountEntities.size = 0 " +
-                "or (act.dateInstall > :today and act.dateUnInstall <= :today))";
+                "and (capacityResource.actInstallCountEntities is empty " +
+                "or capac = (select act1 from ActInstallCountEntity act1" +
+                "where act1.dateInstall > :today and (act1.dateUnInstall <= :today " +
+                "or act1.dateUnInstall is null))) ";
 
         Query query = MainForm.session.createQuery(hql);
         query.setParameter("objectOnPlace", objectOnPlaceEntity);
         query.setParameter("today", MainForm.currentDate);
         query.setParameter("typeResource", typeResourceEntity);
         List<CapacitySourceObjectEntity> list = query.list();
+            System.out.println(list.size());
         return list;
     }
     public void connectCapacityToObject(CapacitySourceObjectEntity capacitySourceObjectEntity){

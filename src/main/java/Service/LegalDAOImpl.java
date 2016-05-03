@@ -1,6 +1,7 @@
 package Service;
 
 import Forms.MainForm;
+import Forms.Service.DialogWindow;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.Owner.LegalFormEntity;
 
@@ -14,5 +15,12 @@ public class LegalDAOImpl {
         Query query = MainForm.session.createQuery(hql);
         List<LegalFormEntity> list = query.list();
         return list;
+    }
+
+    public void saveLegalForm(LegalFormEntity legalFormEntity){
+        MainForm.session.beginTransaction();
+        MainForm.session.save(legalFormEntity);
+        MainForm.session.getTransaction().commit();
+        DialogWindow dialogWindow = new DialogWindow("Новая юр. форма " + legalFormEntity + " сохранена");
     }
 }

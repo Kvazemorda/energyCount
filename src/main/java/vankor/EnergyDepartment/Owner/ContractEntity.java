@@ -83,6 +83,6 @@ public class ContractEntity {
 
     @Override
     public String toString() {
-        return contract;
+        return contract + " " + ownerEntity;
     }
 }

@@ -27,9 +27,9 @@ public class ContractAddNew {
     private Label labelTitle = new Label("Создать контракт с потребителем"),
             labelNumberContract = new Label("№ Контракта");
     private TextField numberContractTextField;
-    private ComboBox<OwnerEntity> ownerEntityComboBox;
+    private static ComboBox<OwnerEntity> ownerEntityComboBox;
     private Button addOwnerButton, commitContractButton;
-    private OwnerEntity owner;
+    private static OwnerEntity owner;
 
     public ContractAddNew() {
         labelTitle.setStyle("-fx-padding: 10px; -fx-font-size: 18");
@@ -53,7 +53,7 @@ public class ContractAddNew {
         borderPaneBasicForm.setLeft(vBoxCenter);
     }
 
-    public void setOwnerEntityComboBox(){
+    public static void setOwnerEntityComboBox(){
         OwnerDAOImpl ownerDAO = new OwnerDAOImpl();
         ownerDAO.getAllOwner();
         ownerEntityComboBox.setItems(FXCollections.observableArrayList(ownerDAO.getAllOwner()));

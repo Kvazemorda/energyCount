@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import org.hibernate.PropertyValueException;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
+import vankor.EnergyDepartment.Owner.ContractEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
@@ -75,61 +76,57 @@ public class ObjectAddNewOnPlace {
                 try {
                     //тестирую поля, чтобы не были пустыми или не в том формате
                     for (int i = 0; i < boxSize; i++) {
-
                         CapacityCreateNew capacityCreateNew = formAddTypeResourceToEquipmentMap.get(i);
-                        double test = Double.parseDouble(capacityCreateNew.getCapacityTextField().getText());
-                        if (test == 0 || test != 0) {
-                        } else {
-                            throw new NumberFormatException();
-                        }
-                        TypeResourceEntity typeResourceEntity = capacityCreateNew.getTypeResourceEntityComboBox().getValue();
-                        if (typeResourceEntity == null) {
-                            throw new NullPointerException();
-                        }
-                        boolean source = capacityCreateNew.getCheckBoxSource().isSelected();
-                        boolean consumer = capacityCreateNew.getCheckBoxConsumer().isSelected();
-                        if (source == false && consumer == false) {
-                            throw new NullPointerException();
-                        }
-                        if (source == true && consumer == true) {
-                            throw new DoubleSourceConsumerException();
-                        }
-                        if (capacityCreateNew.getTFDescription().getText().equals("")){
-                            throw new NullPointerException();
-                        }
-                    }
+                        double capacity = Double.parseDouble(capacityCreateNew.getCapacityTextField().getText());
+                        if (capacity == 0 || capacity != 0) {
+                            TypeResourceEntity typeResourceEntity = capacityCreateNew.getTypeResourceEntityComboBox().getValue();
+                            if (typeResourceEntity == null) {
+                                throw new NullPointerException();
+                            }else{
+                                boolean source = capacityCreateNew.getCheckBoxSource().isSelected();
+                                boolean consumer = capacityCreateNew.getCheckBoxConsumer().isSelected();
+                                if (source == false && consumer == false) {
+                                    throw new NullPointerException();
+                                }else{
+                                    if (source == true && consumer == true) {
+                                        throw new DoubleSourceConsumerException();
+                                    }else{
+                                        String description = capacityCreateNew.getTFDescription().getText();
+                                        if (description.equals("")){
+                                            throw new NullPointerException();
+                                        }else{
+                                            ObjectOnPlaceEntity objectOnPlaceEntity = new ObjectOnPlaceEntity(
+                                                    tNameObject.getText(),
+                                                    tPlaceOnMap.getText(),
+                                                    placeEntity,
+                                                    new Date());
 
-                    ObjectOnPlaceEntity objectOnPlaceEntity = new ObjectOnPlaceEntity(
-                            tNameObject.getText(),
-                            tPlaceOnMap.getText(),
-                            placeEntity,
-                            new Date());
+                                            if (tNameObject.getText().equals("") || tPlaceOnMap.getText().equals("")) {
+                                                String message = "Имя объекта и позиция на ГП не должны быть пустыми";
+                                                DialogWindow dialogWindow = new DialogWindow(message);
+                                            } else {
+                                                ContractEntity contractEntity = capacityCreateNew.getContractEntity();
+                                                if(contractEntity != null){
+                                                    ObjectOnPlaceDAOImpl objectOnPlaceDAO = new ObjectOnPlaceDAOImpl();
+                                                    objectOnPlaceDAO.saveObjectOnPlace(objectOnPlaceEntity);
+                                                    CapacitySourceObjectEntity capacitySourceObjectEntity =
+                                                            new CapacitySourceObjectEntity(capacity, typeResourceEntity, source,
+                                                                    consumer, objectOnPlaceEntity, MainForm.currentDate, description, contractEntity);
+                                                    CapacityObjectDAOImpl capacityEqEachResourceDAO = new CapacityObjectDAOImpl();
+                                                    capacityEqEachResourceDAO.connectCapacityToObject(capacitySourceObjectEntity);
+                                                }else{
+                                                    String message = "Укажи номер договора";
+                                                    DialogWindow dialogWindow = new DialogWindow(message);
+                                                }
 
-                    if (tNameObject.getText().equals("") || tPlaceOnMap.getText().equals("")) {
-                        String message = "Имя объекта и позиция на ГП не должны быть пустыми";
-                        DialogWindow dialogWindow = new DialogWindow(message);
-                    } else {
-                        ObjectOnPlaceDAOImpl objectOnPlaceDAO = new ObjectOnPlaceDAOImpl();
-                        objectOnPlaceDAO.saveObjectOnPlace(objectOnPlaceEntity);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
-                        for (int i = 0; i < boxSize; i++) {
-                            CapacityCreateNew capacityCreateNew =
-                                    formAddTypeResourceToEquipmentMap.get(i);
-                            double capacity = Double.parseDouble(
-                                    capacityCreateNew.getCapacityTextField().getText());
-                            TypeResourceEntity typeResourceEntity = capacityCreateNew
-                                    .getTypeResourceEntityComboBox().getValue();
-                            boolean source = capacityCreateNew.getCheckBoxSource().isSelected();
-                            boolean consumer = capacityCreateNew
-                                    .getCheckBoxConsumer()
-                                    .isSelected();
-                            String description = capacityCreateNew.getTFDescription().getText();
-                            CapacitySourceObjectEntity capacitySourceObjectEntity =
-                                    new CapacitySourceObjectEntity(capacity, typeResourceEntity, source,
-                                            consumer, objectOnPlaceEntity, MainForm.currentDate, description);
-
-                            CapacityObjectDAOImpl capacityEqEachResourceDAO = new CapacityObjectDAOImpl();
-                            capacityEqEachResourceDAO.connectCapacityToObject(capacitySourceObjectEntity);
+                        }else {
+                                throw new NumberFormatException();
                         }
                     }
                 } catch (NumberFormatException exp) {
@@ -167,7 +164,6 @@ public class ObjectAddNewOnPlace {
                     DialogWindow dialogWindow = new DialogWindow(message);
                 }
             }
-
         });
     }
 

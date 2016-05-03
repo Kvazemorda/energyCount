@@ -29,7 +29,7 @@ public class CapacitySourceObjectEntity implements Comparable {
 
     public CapacitySourceObjectEntity(double capacity, TypeResourceEntity typeResourceEntity, Boolean source,
                                       Boolean consumer, ObjectOnPlaceEntity objectOnPlaceEntity, Date dateInstall,
-                                      String description) {
+                                      String description, ContractEntity contractEntity) {
         this.capacity = capacity;
         this.typeResourceEntity = typeResourceEntity;
         this.source = source;
@@ -37,6 +37,7 @@ public class CapacitySourceObjectEntity implements Comparable {
         this.objectOnPlaceEntity = objectOnPlaceEntity;
         this.dateInstall = dateInstall;
         this.description = description;
+        this.contractEntity = contractEntity;
     }
 
     @Id

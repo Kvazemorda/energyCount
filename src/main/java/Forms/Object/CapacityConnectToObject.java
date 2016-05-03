@@ -25,11 +25,11 @@ import javafx.scene.layout.VBox;
 import org.hibernate.PropertyValueException;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
+import vankor.EnergyDepartment.Owner.ContractEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Класс создает панель со списком объектов и списком подключенных к нему мощностей.
@@ -236,69 +236,75 @@ public class CapacityConnectToObject {
             if (boxSize > 0) {
                 try {
                     //тестирую поля, чтобы не были пустыми или не в том формате
-                    for(Map.Entry<Integer,CapacityCreateNew> pair: mapCapacityForConnect.entrySet()){
-                        CapacityCreateNew capacityCreateNew = pair.getValue();
+                    for (int i = 0; i < boxSize; i++) {
+                        CapacityCreateNew capacityCreateNew = mapCapacityForConnect.get(i);
+                        double capacity = Double.parseDouble(capacityCreateNew.getCapacityTextField().getText());
+                        if (capacity == 0 || capacity != 0) {
+                            TypeResourceEntity typeResourceEntity = capacityCreateNew.getTypeResourceEntityComboBox().getValue();
+                            if (typeResourceEntity == null) {
+                                throw new NullPointerException();
+                            } else {
+                                boolean source = capacityCreateNew.getCheckBoxSource().isSelected();
+                                boolean consumer = capacityCreateNew.getCheckBoxConsumer().isSelected();
+                                if (source == false && consumer == false) {
+                                    throw new NullPointerException();
+                                } else {
+                                    if (source == true && consumer == true) {
+                                        throw new DoubleSourceConsumerException();
+                                    } else {
+                                        String description = capacityCreateNew.getTFDescription().getText();
+                                        if (description.equals("")) {
+                                            throw new NullPointerException();
+                                        } else {
+                                            ContractEntity contractEntity = capacityCreateNew.getContractEntity();
+                                            if (contractEntity != null) {
+                                                CapacitySourceObjectEntity capacitySourceObjectEntity =
+                                                        new CapacitySourceObjectEntity(capacity, typeResourceEntity, source,
+                                                                consumer, objectOnPlaceEntity, MainForm.currentDate, description, contractEntity);
+                                                CapacityObjectDAOImpl capacityEqEachResourceDAO = new CapacityObjectDAOImpl();
+                                                capacityEqEachResourceDAO.connectCapacityToObject(capacitySourceObjectEntity);
+                                                String message = "Нагрузка подключена к объекту";
+                                                DialogWindow dialogWindow = new DialogWindow(message);
+                                                createListConnectedCapacity();
+                                            } else {
+                                                String message = "Укажи номер договора";
+                                                DialogWindow dialogWindow = new DialogWindow(message);
+                                            }
 
-                        double test = Double.parseDouble(capacityCreateNew.getCapacityTextField().getText());
-                        if (test == 0 || test != 0) {
+                                        }
+                                    }
+                                }
+                            }
                         } else {
                             throw new NumberFormatException();
                         }
-                        if (capacityCreateNew.getTypeResourceEntityComboBox().getSelectionModel().isEmpty()) {
-                            throw new NullPointerException();
-                        }
-                        boolean source = capacityCreateNew.getCheckBoxSource().isSelected();
-                        boolean consumer = capacityCreateNew.getCheckBoxConsumer().isSelected();
-                        if (source == false && consumer == false) {
-                            throw new NullPointerException();
-                        }
-                        if (source == true && consumer == true) {
-                            throw new DoubleSourceConsumerException();
-                        }
-                        if (capacityCreateNew.getTFDescription().getText().equals("")){
-                            throw new NullPointerException();
-                        }
                     }
-                    for(Map.Entry<Integer,CapacityCreateNew> pair: mapCapacityForConnect.entrySet()){
-                        CapacityCreateNew capacityCreateNew = pair.getValue();
-                            double capacity = Double.parseDouble(capacityCreateNew.getCapacityTextField()
-                                    .getText());
-                            TypeResourceEntity typeResourceEntity = capacityCreateNew.getTypeResourceEntityComboBox()
-                                    .getValue();
-                            boolean source = capacityCreateNew.getCheckBoxSource().isSelected();
-                            boolean consumer = capacityCreateNew.getCheckBoxConsumer().isSelected();
-                            String description = capacityCreateNew.getTFDescription().getText();
-                            CapacitySourceObjectEntity capacitySourceObjectEntity =
-                                    new CapacitySourceObjectEntity(capacity, typeResourceEntity, source,
-                                            consumer, objectOnPlaceEntity, MainForm.currentDate, description);
-                        CapacityObjectDAOImpl capacityObjectDAO = new CapacityObjectDAOImpl();
-                        capacityObjectDAO.connectCapacityToObject(capacitySourceObjectEntity);
-                    }
-                    createListConnectedCapacity();
+
                 } catch (NumberFormatException exp) {
                     System.out.println(exp);
                     String message = "В поле \"производительность\" должно быть число";
                     DialogWindow dialogWindow = new DialogWindow(message);
+
                 } catch (NullPointerException e) {
                     System.out.println(e);
                     String message = "Поля не должно быть пустыми";
                     DialogWindow dialogWindow = new DialogWindow(message);
+
                 } catch (DoubleSourceConsumerException e2) {
                     String message = "Один тип ресурса может быть либо источником либо потребителем";
                     DialogWindow dialogWindow = new DialogWindow(message);
+
                 } catch (PropertyValueException e) {
                     System.out.println(e);
                     String message = "Укажи площадку на которой установлен объект";
                     DialogWindow dialogWindow = new DialogWindow(message);
-                } catch (Exception e) {
-                    System.out.println(e);
-                    e.printStackTrace();
-                    String message = "Укажи объект к которму добавляешь ресурс ";
-                    DialogWindow dialogWindow = new DialogWindow(message);
                 }
             }
+
         });
     }
+
+
 
     /**
      * Изменение даты календаря MainForm.datePicker, обновляет список подклченных мощностей на текущую дату

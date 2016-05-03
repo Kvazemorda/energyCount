@@ -53,6 +53,29 @@ public class LegalFormEntity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LegalFormEntity)) return false;
+
+        LegalFormEntity that = (LegalFormEntity) o;
+
+        if (fullName != null ? !fullName.equals(that.fullName) : that.fullName != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (ownerEntitySet != null ? !ownerEntitySet.equals(that.ownerEntitySet) : that.ownerEntitySet != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
+        result = 31 * result + (ownerEntitySet != null ? ownerEntitySet.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return name;
     }
