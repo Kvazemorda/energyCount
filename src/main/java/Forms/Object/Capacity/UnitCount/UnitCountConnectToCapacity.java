@@ -4,7 +4,6 @@ import Forms.MainForm;
 import Forms.Service.DialogWindow;
 import Forms.Service.DialogWindowYesOrNo;
 import Service.ActInstallUnitCountDAOImp;
-import Service.CapacityObjectDAOImpl;
 import Service.Exception.NextCalibrationIsToday;
 import Service.UnitCountDAOImpl;
 import javafx.collections.FXCollections;
@@ -28,6 +27,7 @@ import vankor.EnergyDepartment.WriteDataUnitCountToJournal.UnitCountEntity.UnitC
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -52,10 +52,10 @@ public class UnitCountConnectToCapacity {
     private ListView<CapacitySourceObjectEntity> listViewCapacity;
     private static ListView<UnitCountEntity> listViewUnitCount;
 
-    public UnitCountConnectToCapacity(ObjectOnPlaceEntity objectOnPlaceEntity, TypeResourceEntity typeResourceEntity) {
+    public UnitCountConnectToCapacity(ObjectOnPlaceEntity objectOnPlaceEntity, TypeResourceEntity typeResourceEntity, ArrayList<CapacitySourceObjectEntity> capacitySourceObjectEntityList) {
         this.objectOnPlaceEntity = objectOnPlaceEntity;
         this.typeResourceEntity = typeResourceEntity;
-        listViewCapacity = new ListView<>();
+        listViewCapacity = new ListView<>(FXCollections.observableArrayList(capacitySourceObjectEntityList));
         listViewUnitCount = new ListView<>();
         getListViewUnitCount();
         getListViewCapacity();
@@ -105,9 +105,6 @@ public class UnitCountConnectToCapacity {
     }
 
     private void getListViewCapacity(){
-        CapacityObjectDAOImpl capacityObjectDAO = new CapacityObjectDAOImpl();
-        listViewCapacity.setItems(FXCollections.observableArrayList(capacityObjectDAO
-                .getCapacityWithoutUnitCount(objectOnPlaceEntity, typeResourceEntity)));
         listViewCapacity.getSelectionModel().selectFirst();
         capacitySourceObjectEntity = listViewCapacity.getSelectionModel().getSelectedItem();
         listViewCapacity.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -135,7 +132,7 @@ public class UnitCountConnectToCapacity {
                 if(textFieldFirstCount.getText() != ""){
                     firstCount = Double.parseDouble(textFieldFirstCount.getText());
                 }
-                if (dateNextCalibration.equals(MainForm.currentDate)){
+                if (dateNextCalibration.before(MainForm.currentDate)){
                     throw new NextCalibrationIsToday();
                 }
                 description = textFieldDescription.getText();

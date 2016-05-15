@@ -23,9 +23,11 @@ public class ValueResourceWithoutUnitCount {
     private double workHours;
     public boolean source = false;
     private JournalOtherMethodEntity journalOtherMethodEntityCurrent;
+    private String background = "-fx-background-color: #f6f7c5";
 
     public ValueResourceWithoutUnitCount(CapacitySourceObjectEntity capacitySourceObjectEntity) {
         this.capacitySourceObjectEntity = capacitySourceObjectEntity;
+
     }
 
     public VBox createForm(){
@@ -35,7 +37,7 @@ public class ValueResourceWithoutUnitCount {
         tfWorkHours.setStyle("-fx-padding: 4px,4px;");
         hBox1 = new HBox(new Label("Производительность "), new Label(capacitySourceObjectEntity.getCapacity() + " в час"));
         hBox1.setStyle("-fx-padding: 5");
-        labelDescription = new Label(capacitySourceObjectEntity.getDescription());
+        labelDescription = new Label(capacitySourceObjectEntity.getContractEntity().toString());
         labelDescription.setStyle("-fx-padding: 5");
         workHours = Double.parseDouble(tfWorkHours.getText());
         valueOfPeriod = capacitySourceObjectEntity.getCapacity() * workHours;
@@ -46,8 +48,8 @@ public class ValueResourceWithoutUnitCount {
         hBox2.setStyle("-fx-padding: 5");
         journalOtherMethodEntityCurrent = new JournalOtherMethodEntity(MainForm.currentDate, workHours, valueOfPeriod, capacitySourceObjectEntity);
         VBox vBox = new VBox(labelDescription, hBox1, hBox2);
-        vBox.setStyle("-fx-font-smoothing-type: #d6d6d6");
-        vBox.setStyle("-fx-padding: 6");
+        vBox.setStyle("-fx-font-smoothing-type: #d6d6d6; -fx-padding: 6");
+        vBox.setStyle(background);
         changeWorkHours();
         addValueToBalance();
         return vBox;

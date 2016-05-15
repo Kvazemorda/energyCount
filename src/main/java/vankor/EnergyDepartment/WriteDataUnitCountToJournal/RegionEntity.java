@@ -10,6 +10,13 @@ public class RegionEntity {
     private String name;
     private Set<PlaceEntity> placesById;
 
+    public RegionEntity() {
+    }
+
+    public RegionEntity(String name) {
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, insertable = true, updatable = true)
@@ -57,5 +64,10 @@ public class RegionEntity {
 
     public void setPlacesById(Set<PlaceEntity> placesById) {
         this.placesById = placesById;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

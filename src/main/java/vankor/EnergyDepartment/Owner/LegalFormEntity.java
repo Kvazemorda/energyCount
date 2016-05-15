@@ -61,8 +61,6 @@ public class LegalFormEntity {
 
         if (fullName != null ? !fullName.equals(that.fullName) : that.fullName != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (ownerEntitySet != null ? !ownerEntitySet.equals(that.ownerEntitySet) : that.ownerEntitySet != null)
-            return false;
 
         return true;
     }
@@ -71,7 +69,6 @@ public class LegalFormEntity {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
-        result = 31 * result + (ownerEntitySet != null ? ownerEntitySet.hashCode() : 0);
         return result;
     }
 

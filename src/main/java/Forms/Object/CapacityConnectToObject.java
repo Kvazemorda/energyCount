@@ -62,6 +62,7 @@ public class CapacityConnectToObject {
         resourceConnectLabel.setStyle(cssLabel);
         listObjectOnPlace.setStyle(cssLabel);
         capacityObjectEntityListView.setStyle(cssLabel);
+        capacityObjectEntityListView.setMinWidth(350);
 
         VBox vBox = new VBox();
         vBox.getChildren().add(resourceConnectLabel);
@@ -270,7 +271,6 @@ public class CapacityConnectToObject {
                                                 String message = "Укажи номер договора";
                                                 DialogWindow dialogWindow = new DialogWindow(message);
                                             }
-
                                         }
                                     }
                                 }
@@ -303,8 +303,6 @@ public class CapacityConnectToObject {
 
         });
     }
-
-
 
     /**
      * Изменение даты календаря MainForm.datePicker, обновляет список подклченных мощностей на текущую дату

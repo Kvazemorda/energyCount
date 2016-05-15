@@ -12,6 +12,13 @@ public class TypeResourceEntity implements Comparable{
     private String name;
     private Set<CapacitySourceObjectEntity> CEEREntities;
 
+    public TypeResourceEntity() {
+    }
+
+    public TypeResourceEntity(String name) {
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, insertable = true, updatable = true)

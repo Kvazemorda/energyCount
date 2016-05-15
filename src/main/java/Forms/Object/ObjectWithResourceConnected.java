@@ -1,11 +1,12 @@
 package Forms.Object;
 
 import Forms.Object.Capacity.UnitCount.JournalCount.JournalAddNewCountOrValue;
-import Forms.Object.Capacity.UnitCount.UnitCountConnectToCapacity;
-import Forms.Object.Capacity.UnitCount.JournalCount.ValueResourceWithoutUnitCount;
 import Forms.Object.Capacity.UnitCount.JournalCount.ValueResourceWithUnitCount;
-import Service.CapacityObjectDAOImpl;
+import Forms.Object.Capacity.UnitCount.JournalCount.ValueResourceWithoutUnitCount;
+import Forms.Object.Capacity.UnitCount.JournalCount.ValueResourceZeroCapacity;
+import Forms.Object.Capacity.UnitCount.UnitCountConnectToCapacity;
 import Service.ActInstallUnitCountDAOImp;
+import Service.CapacityObjectDAOImpl;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -15,7 +16,7 @@ import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,19 +31,25 @@ public class ObjectWithResourceConnected {
     private Button buttonSource = new Button("+"),
             buttonConsumer = new Button("+"),
             buttonDeleteObject = new Button();
-    public boolean capacitySourceConnect = false,
+    public boolean
+            capacitySourceConnect = false,
             capacityConsumerConnect = false;
-    public static final String cssDefault = "" + "-fx-padding: 5px, 5px;"
-            + "-fx-border-color: #b0b4b6;"
-            + "-fx-border-insets: 5;"
-            + "-fx-border-width: 1;"
-            + "-fx-border-style: dashed;";
+    public static String cssDefault;
+    private ArrayList<CapacitySourceObjectEntity> sourceObjectEntities, consumerObjectEntities;
 
     public ObjectWithResourceConnected(TypeResourceEntity typeResourceEntity, ObjectOnPlaceEntity objectOnPlaceEntity) {
         this.typeResourceEntity = typeResourceEntity;
         this.objectOnPlaceEntity = objectOnPlaceEntity;
         addNewUnitCount();
+        cssDefault = "" + "-fx-padding: 5px, 5px;"
+                + "-fx-border-color: #b0b4b6;"
+                + "-fx-border-insets: 5;"
+                + "-fx-border-width: 1;"
+                + "-fx-border-style: dashed;";
+        sourceObjectEntities = new ArrayList<>();
+        consumerObjectEntities = new ArrayList<>();
     }
+
     // Создается бордер узлов учета источника. В центре заполняется unitCountSourceBox
     public BorderPane createObjectWithResourceSource() {
         Label label = new Label(objectOnPlaceEntity.getName());
@@ -91,11 +98,19 @@ public class ObjectWithResourceConnected {
                 unitCountItem.source = true;
                 unitCountSourceBox.getChildren().add(unitCountItem.createPaneUnitCount());
                 JournalAddNewCountOrValue.valueUnitCount.add(unitCountItem);
-            }else{
+            }else{if(capacitySourceObjectEntity.getCapacity() > 0 ){
                 ValueResourceWithoutUnitCount valueResourceWithoutUnitCount = new ValueResourceWithoutUnitCount(capacitySourceObjectEntity);
                 valueResourceWithoutUnitCount.source = true;
                 unitCountSourceBox.getChildren().add(valueResourceWithoutUnitCount.createForm());
                 JournalAddNewCountOrValue.valueOtherMethod.add(valueResourceWithoutUnitCount);
+                sourceObjectEntities.add(capacitySourceObjectEntity);
+                }else{
+                ValueResourceZeroCapacity valueResourceZeroCapacity = new ValueResourceZeroCapacity(capacitySourceObjectEntity);
+                valueResourceZeroCapacity.source = true;
+                unitCountSourceBox.getChildren().add(valueResourceZeroCapacity.createForm());
+                JournalAddNewCountOrValue.valueResourceZero.add(valueResourceZeroCapacity);
+
+            }
             }
         }
     }
@@ -114,23 +129,29 @@ public class ObjectWithResourceConnected {
                 unitCountItem.setUnitCountEntity(actInstallCountEntity.getUnitCountByUnitCount());
                 unitCountConsumerBox.getChildren().add(unitCountItem.createPaneUnitCount());
                 JournalAddNewCountOrValue.valueUnitCount.add(unitCountItem);
-            }else{
+            }else{if(capacitySourceObjectEntity.getCapacity() > 0 ){
                 ValueResourceWithoutUnitCount valueResourceWithoutUnitCount = new ValueResourceWithoutUnitCount(capacitySourceObjectEntity);
                 unitCountConsumerBox.getChildren().add(valueResourceWithoutUnitCount.createForm());
                 JournalAddNewCountOrValue.valueOtherMethod.add(valueResourceWithoutUnitCount);
+                consumerObjectEntities.add(capacitySourceObjectEntity);
+                }else{
+                ValueResourceZeroCapacity valueResourceZeroCapacity = new ValueResourceZeroCapacity(capacitySourceObjectEntity);
+                valueResourceZeroCapacity.source = false;
+                unitCountConsumerBox.getChildren().add(valueResourceZeroCapacity.createForm());
+                JournalAddNewCountOrValue.valueResourceZero.add(valueResourceZeroCapacity);
+            }
             }
         }
     }
 
     public void addNewUnitCount(){
         buttonSource.addEventHandler(MouseEvent.MOUSE_CLICKED,event ->{
-            UnitCountConnectToCapacity unitCountConnetToCapacity = new UnitCountConnectToCapacity(objectOnPlaceEntity, typeResourceEntity);
+            UnitCountConnectToCapacity unitCountConnetToCapacity = new UnitCountConnectToCapacity(objectOnPlaceEntity, typeResourceEntity, sourceObjectEntities);
         });
         buttonConsumer.addEventHandler(MouseEvent.MOUSE_CLICKED,event ->{
-            UnitCountConnectToCapacity unitCountConnectToCapacity = new UnitCountConnectToCapacity(objectOnPlaceEntity, typeResourceEntity);
+            UnitCountConnectToCapacity unitCountConnectToCapacity = new UnitCountConnectToCapacity(objectOnPlaceEntity, typeResourceEntity, consumerObjectEntities);
         });
     }
-
 
 
     public ObjectOnPlaceEntity getObjectOnPlaceEntity() {

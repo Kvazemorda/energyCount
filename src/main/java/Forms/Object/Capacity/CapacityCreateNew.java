@@ -1,14 +1,13 @@
 package Forms.Object.Capacity;
 
+import Forms.MainForm;
+import Forms.TypeResourceAddNew;
 import Service.CapacityObjectDAOImpl;
 import Service.ContractDAOImpl;
 import Service.TypeResourceDAOImpl;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
@@ -33,9 +32,15 @@ public class CapacityCreateNew {
     private TypeResourceEntity typeResourceEntity;
     private PlaceEntity placeEntity;
     private ContractEntity contractEntity;
+    private ComboBox<ContractEntity> contractEntityComboBox;
+    private Button addNewTypeResourceButton;
 
-// добавить в грид панель наверно, выбор контракта
     public GridPane createFormAddTypeCapacityToObject(){
+        addNewTypeResourceButton = new Button("+");
+        clickAddNewTypeResourceButton();
+        contractEntityComboBox = new ComboBox<>();
+        contractEntityComboBox();
+        updatesForms();
         capacityTextField = new TextField();
         capacityTextField.setMaxWidth(90);
         TFDescription = new TextField();
@@ -54,17 +59,18 @@ public class CapacityCreateNew {
         labelConsumer = new Label("Потребитель");
         gridPane = new GridPane();
         gridPane.add(labelContract,0,0);
-        gridPane.add(labelTypeResource,1,0);
+        gridPane.add(labelTypeResource,0,2);
         gridPane.add(labelCapacity,2,0);
-        gridPane.add(labelDescription,3,0);
-        gridPane.add(labelSource,4,0);
-        gridPane.add(labelConsumer,5,0);
-        gridPane.add(contractEntityComboBox(),0,1);
-        gridPane.add(createComboBoxResource(),1,1);
+        gridPane.add(labelDescription,2,2);
+        gridPane.add(labelSource,3,0);
+        gridPane.add(labelConsumer,3,2);
+        gridPane.add(contractEntityComboBox,0,1);
+        gridPane.add(createComboBoxResource(),0,3);
+        gridPane.add(addNewTypeResourceButton,1,3);
         gridPane.add(capacityTextField,2,1);
-        gridPane.add(TFDescription,3,1);
-        gridPane.add(borderPaneSource,4,1);
-        gridPane.add(borderPaneConsumer,5,1);
+        gridPane.add(TFDescription,2,3);
+        gridPane.add(borderPaneSource,3,1);
+        gridPane.add(borderPaneConsumer,3,3);
         gridPane.setStyle("-fx-padding:2 ; -fx-hgap: 2; -fx-vgap: 2;");
         gridPane.setAlignment(Pos.TOP_CENTER);
         return gridPane;
@@ -87,50 +93,40 @@ public class CapacityCreateNew {
         return capacitySourceObjectEntityComboBox;
     }
 
-    public ComboBox<ContractEntity> contractEntityComboBox(){
+    public void contractEntityComboBox(){
         ContractDAOImpl contractDAO = new ContractDAOImpl();
-        ComboBox<ContractEntity> contractEntityComboBox = new ComboBox<>();
         contractEntityComboBox.setItems(FXCollections.observableArrayList(contractDAO.getAllContracts()));
-        contractEntityComboBox.onActionProperty().setValue(event ->{
+        contractEntityComboBox.onActionProperty().setValue(event -> {
             contractEntity = contractEntityComboBox.getSelectionModel().getSelectedItem();
+            System.out.println(contractEntity);
         });
-        return contractEntityComboBox;
     }
 
+    public void updatesForms(){
+        MainForm.updateFormsButton.onActionProperty().setValue(v ->{
+            contractEntityComboBox();
+        });
+    }
+
+    public void clickAddNewTypeResourceButton(){
+        addNewTypeResourceButton.onActionProperty().setValue(v ->{
+            TypeResourceAddNew typeResourceAddNew = new TypeResourceAddNew();
+        });
+    }
     public CheckBox getCheckBoxConsumer() {
         return checkBoxConsumer;
-    }
-
-    public void setCheckBoxConsumer(CheckBox checkBoxConsumer) {
-        this.checkBoxConsumer = checkBoxConsumer;
     }
 
     public CheckBox getCheckBoxSource() {
         return checkBoxSource;
     }
 
-    public void setCheckBoxSource(CheckBox checkBoxSource) {
-        this.checkBoxSource = checkBoxSource;
-    }
-
     public TextField getCapacityTextField() {
         return capacityTextField;
     }
 
-    public void setCapacityTextField(TextField capacityTextField) {
-        this.capacityTextField = capacityTextField;
-    }
-
     public ComboBox<TypeResourceEntity> getTypeResourceEntityComboBox() {
         return typeResourceEntityComboBox;
-    }
-
-    public void setTypeResourceEntityComboBox(ComboBox<TypeResourceEntity> typeResourceEntityComboBox) {
-        this.typeResourceEntityComboBox = typeResourceEntityComboBox;
-    }
-
-    public GridPane getGridPane() {
-        return gridPane;
     }
 
     public void setGridPane(GridPane gridPane) {
@@ -141,31 +137,7 @@ public class CapacityCreateNew {
         return TFDescription;
     }
 
-    public void setTFDescription(TextField TFDescription) {
-        this.TFDescription = TFDescription;
-    }
-
-    public TypeResourceEntity getTypeResourceEntity() {
-        return typeResourceEntity;
-    }
-
-    public void setTypeResourceEntity(TypeResourceEntity typeResourceEntity) {
-        this.typeResourceEntity = typeResourceEntity;
-    }
-
-    public PlaceEntity getPlaceEntity() {
-        return placeEntity;
-    }
-
-    public void setPlaceEntity(PlaceEntity placeEntity) {
-        this.placeEntity = placeEntity;
-    }
-
     public ContractEntity getContractEntity() {
         return contractEntity;
-    }
-
-    public void setContractEntity(ContractEntity contractEntity) {
-        this.contractEntity = contractEntity;
     }
 }

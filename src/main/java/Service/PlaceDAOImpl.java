@@ -1,6 +1,7 @@
 package Service;
 
 import Forms.MainForm;
+import Forms.Service.DialogWindow;
 import org.hibernate.Session;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
 
@@ -20,5 +21,13 @@ public class PlaceDAOImpl implements PlaceDAO {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    public void commitPlace(PlaceEntity placeEntity){
+            MainForm.session.beginTransaction();
+            MainForm.session.saveOrUpdate(placeEntity);
+            MainForm.session.getTransaction().commit();
+            String s = "Площадка " + placeEntity.getName() + " сохранен";
+            DialogWindow dialogWindow = new DialogWindow(s);
     }
 }

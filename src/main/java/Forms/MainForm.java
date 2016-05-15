@@ -12,6 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -47,6 +48,7 @@ public class MainForm extends Application{
     private static TreeItem<String> treeReports, treeReportCTVS, treeItemAddNewObject, treeItemConnectObjByResource, treeAddNewContract;
     private Map<TreeItem<String>, Tab> mapTabs;
     public static DatePicker datePicker;
+    public static Button updateFormsButton;
 
     public static void main(String[] args) {
         System.out.println("start Hibernate");
@@ -112,9 +114,11 @@ public class MainForm extends Application{
      * @return BorderPane
      */
     private BorderPane createBorderPane(){
+        updateFormsButton = new Button("",new ImageView("file:src/main/Icons/updates.png"));
         HBox hBox = new HBox();
         HBox hBoxMenu = new HBox();
         hBoxMenu.getChildren().add(createDatePicker());
+    //    hBoxMenu.getChildren().add(updateFormsButton);
         hBoxMenu.getChildren().add(createTopMenu());
         hBox.getChildren().add(createTreeView());
         borderPane = new BorderPane();
@@ -220,4 +224,5 @@ public class MainForm extends Application{
     public static Date getCurrentDate() {
         return currentDate;
     }
+
 }

@@ -2,11 +2,7 @@ package Forms.Object.Capacity.UnitCount.JournalCount;
 
 import Forms.MainForm;
 import Forms.Object.ObjectWithResourceConnected;
-import Service.JournalOtherMethodDAOImpl;
-import Service.JournalUnitCountDAOImpl;
-import Service.ObjectOnPlaceDAOImpl;
-import Service.PlaceDAOImpl;
-import Service.TypeResourceDAOImpl;
+import Service.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -34,6 +30,7 @@ public class JournalAddNewCountOrValue {
     private VBox boxSource = new VBox(),
             boxConsumer = new VBox(),
             vBoxBalance = new VBox();
+    public static Set<ValueResourceZeroCapacity> valueResourceZero;
     public static Set<ValueResourceWithoutUnitCount> valueOtherMethod;
     public static Set<ValueResourceWithUnitCount> valueUnitCount;
     public static Label labelSourceValue, labelConsumerValue, labelBalanceResource, labelSource, labelConsumer;
@@ -118,8 +115,10 @@ public class JournalAddNewCountOrValue {
         buttonAddNewCountListener();
         valueOtherMethod = new HashSet<>();
         valueUnitCount = new HashSet<>();
+        valueResourceZero = new HashSet<>();
         valueOtherMethod.clear();
         valueUnitCount.clear();
+        valueResourceZero.clear();
         ValueResourceWithUnitCount.balanceResource = 0;
         ValueResourceWithUnitCount.countValueConsumer = 0;
         ValueResourceWithUnitCount.countValueSource = 0;
@@ -178,9 +177,10 @@ public class JournalAddNewCountOrValue {
         buttonAddNewCount.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
             JournalUnitCountDAOImpl journalUnitCountDAO = new JournalUnitCountDAOImpl();
             journalUnitCountDAO.writeCountToJournal(valueUnitCount);
+            JournalFillDAOImp journalFillDAOImp = new JournalFillDAOImp();
+            journalFillDAOImp.writeCountToJournal(valueResourceZero);
             JournalOtherMethodDAOImpl journalOtherMethodDAO = new JournalOtherMethodDAOImpl();
             journalOtherMethodDAO.writeValueToJournal(valueOtherMethod);
-
         });
     }
     public void changeDate(){

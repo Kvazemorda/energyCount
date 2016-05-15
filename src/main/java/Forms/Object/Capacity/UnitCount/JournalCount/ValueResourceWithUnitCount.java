@@ -38,6 +38,8 @@ public class ValueResourceWithUnitCount implements Comparable{
     private ActInstallCountEntity actInstallCountEntity;
     private CapacitySourceObjectEntity capacitySourceObjectEntity;
     private JournalUnitCountEntity journalUnitCountEntity, journalUnitCountEntityNext;
+    private String background = "-fx-background-color: #c3dff7";
+
 
     public ValueResourceWithUnitCount(CapacitySourceObjectEntity capacitySourceObjectEntity) {
         this.capacitySourceObjectEntity = capacitySourceObjectEntity;
@@ -50,7 +52,8 @@ public class ValueResourceWithUnitCount implements Comparable{
         cssLabel = "-fx-padding: 4px,4px; ";
         model = new Label(unitCountEntity.getModel());
         model.setStyle(cssLabel);
-        labelDescription = new Label(actInstallCountEntity.getDescription());
+        labelDescription = new Label(actInstallCountEntity.getDescription() + " " +
+                capacitySourceObjectEntity.getContractEntity().toString());
         labelDescription.setStyle(cssLabel);
         VBox leftVBox = new VBox(model, labelDescription);
         number = new Label(unitCountEntity.getNumber());
@@ -88,7 +91,7 @@ public class ValueResourceWithUnitCount implements Comparable{
         borderPane.setLeft(leftVBox);
         borderPane.setRight(rightHBox);
         borderPane.setBottom(bottomVBox);
-        borderPane.setStyle(cssDefault);
+        borderPane.setStyle(cssDefault + " " + background);
         return borderPane;
     }
     public void deleteUnitCountListener(){
@@ -234,36 +237,12 @@ public class ValueResourceWithUnitCount implements Comparable{
         return labelValue;
     }
 
-    public UnitCountEntity getUnitCountEntity() {
-        return unitCountEntity;
-    }
-
     public void setUnitCountEntity(UnitCountEntity unitCountEntity) {
         this.unitCountEntity = unitCountEntity;
     }
 
     public String getObjectName() {
         return objectName;
-    }
-
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
-    }
-
-    public String getCssDefault() {
-        return cssDefault;
-    }
-
-    public void setCssDefault(String cssDefault) {
-        this.cssDefault = cssDefault;
-    }
-
-    public String getCssLabel() {
-        return cssLabel;
-    }
-
-    public void setCssLabel(String cssLabel) {
-        this.cssLabel = cssLabel;
     }
 
     public ActInstallCountEntity getActInstallCountEntity() {
@@ -286,15 +265,6 @@ public class ValueResourceWithUnitCount implements Comparable{
         return journalUnitCountEntity;
     }
 
-    public void setJournalUnitCountEntity(JournalUnitCountEntity journalUnitCountEntity) {
-        this.journalUnitCountEntity = journalUnitCountEntity;
-    }
-
-
-    public void setPreviewCount(double lastCount) {
-        this.previewCount = lastCount;
-    }
-
     public double getValue() {
         return value;
     }
@@ -303,22 +273,11 @@ public class ValueResourceWithUnitCount implements Comparable{
         this.value = value;
     }
 
-    public Label getLabelNextCount() {
-        return labelNextCount;
-    }
-
-    public void setLabelNextCount(Label labelNextCount) {
-        this.labelNextCount = labelNextCount;
-    }
     public double getCurrentCount(){
         return currentCountDouble;
     }
 
     public JournalUnitCountEntity getJournalUnitCountEntityNext() {
         return journalUnitCountEntityNext;
-    }
-
-    public void setJournalUnitCountEntityNext(JournalUnitCountEntity journalUnitCountEntityNext) {
-        this.journalUnitCountEntityNext = journalUnitCountEntityNext;
     }
 }

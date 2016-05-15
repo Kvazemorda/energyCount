@@ -62,14 +62,9 @@ public class ContractEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ContractEntity)) return false;
-
         ContractEntity that = (ContractEntity) o;
-
-        if (capacitySourceObjectEntities != null ? !capacitySourceObjectEntities.equals(that.capacitySourceObjectEntities) : that.capacitySourceObjectEntities != null)
-            return false;
         if (contract != null ? !contract.equals(that.contract) : that.contract != null) return false;
         if (ownerEntity != null ? !ownerEntity.equals(that.ownerEntity) : that.ownerEntity != null) return false;
-
         return true;
     }
 
@@ -77,12 +72,11 @@ public class ContractEntity {
     public int hashCode() {
         int result = contract != null ? contract.hashCode() : 0;
         result = 31 * result + (ownerEntity != null ? ownerEntity.hashCode() : 0);
-        result = 31 * result + (capacitySourceObjectEntities != null ? capacitySourceObjectEntities.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return contract + " " + ownerEntity;
+        return ownerEntity  + " " + contract;
     }
 }

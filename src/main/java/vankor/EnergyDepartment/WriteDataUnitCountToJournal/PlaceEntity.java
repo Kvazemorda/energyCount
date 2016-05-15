@@ -15,6 +15,14 @@ public class PlaceEntity {
     private RegionEntity regionByRegion;
     private Set<UsersEntity> usersEntity;
 
+    public PlaceEntity() {
+    }
+
+    public PlaceEntity(RegionEntity regionByRegion, String name) {
+        this.regionByRegion = regionByRegion;
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false, insertable = true, updatable = true)

@@ -84,6 +84,7 @@ public class ContractAddNew {
                         contractEntity.setOwnerEntity(owner);
                         ContractDAOImpl contractDAO = new ContractDAOImpl();
                         contractDAO.commitNewContract(contractEntity);
+                        //CapacityCreateNew.contractEntityComboBox();
                     }else{
                         DialogWindow dialogWindow = new DialogWindow("Выбери контрагента");
                     }

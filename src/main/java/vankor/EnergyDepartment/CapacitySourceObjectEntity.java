@@ -192,10 +192,10 @@ public class CapacitySourceObjectEntity implements Comparable {
     public String toString() {
         if (source == true) {
             return typeResourceEntity.getName() +
-                    " истч., мощн. - " + capacity + " " + description;
+                    " истч., мощн. - " + capacity + " " + description + " " + contractEntity;
         } else {
             return typeResourceEntity.getName() +
-                    " потрб., мощн. - " + capacity + " " + description;
+                    " потрб., мощн. - " + capacity + " " + description + " " + contractEntity;
         }
     }
 

@@ -42,12 +42,15 @@ public class ObjectAddNewOnPlace {
             placeLabel = new Label("Площадка");
     private TextField tNameObject = new TextField(),
             tPlaceOnMap = new TextField();
-    private Button bAddObject;
-    private PlaceEntity placeEntity;
-    private ComboBox comboBox;
+    private Button bAddObject, bAddPlace;
+    private static PlaceEntity placeEntity;
+    private static ComboBox comboBox;
+    private CapacityCreateNew capacityCreateNew;
 
 
     public GridPane createFormAddNewObject() {
+        comboBox = new ComboBox<PlaceEntity>();
+        bAddPlace = new Button("+");
         String cssLabel = "-fx-padding: 3px,3px,0px,3px;";
         nameObject.setStyle(cssLabel);
         tNameObject.setStyle(cssLabel);
@@ -57,12 +60,14 @@ public class ObjectAddNewOnPlace {
         GridPane gridPaneAddNewObject = new GridPane();
         gridPaneAddNewObject.setStyle("-fx-hgap: 5px;");
         gridPaneAddNewObject.add(placeLabel, 0, 0);
-        gridPaneAddNewObject.add(nameObject, 1, 0);
-        gridPaneAddNewObject.add(placeOnMap, 2, 0);
+        gridPaneAddNewObject.add(nameObject, 2, 0);
+        gridPaneAddNewObject.add(placeOnMap, 3, 0);
         gridPaneAddNewObject.add(createComboBoxPlace(), 0, 1);
-        gridPaneAddNewObject.add(tNameObject, 1, 1);
-        gridPaneAddNewObject.add(tPlaceOnMap, 2, 1);
+        gridPaneAddNewObject.add(bAddPlace, 1, 1);
+        gridPaneAddNewObject.add(tNameObject, 2, 1);
+        gridPaneAddNewObject.add(tPlaceOnMap, 3, 1);
         addNewObject();
+        clickOnbAddPlace();
 
         return gridPaneAddNewObject;
     }
@@ -171,16 +176,22 @@ public class ObjectAddNewOnPlace {
      * Создается комбобокс площадок
      * @return ComboBox<PlaceEntity>
      */
-    private ComboBox<PlaceEntity> createComboBoxPlace() {
+    public static ComboBox<PlaceEntity> createComboBoxPlace() {
         PlaceDAOImpl placeDAO = new PlaceDAOImpl();
         placeDAO.setSession(MainForm.session);
         final ArrayList<PlaceEntity> placeEntities = (ArrayList) placeDAO.findALLPlace();
-        comboBox = new ComboBox<PlaceEntity>();
+        comboBox.getItems().clear();
         comboBox.setItems(FXCollections.observableArrayList(placeEntities));
         comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             placeEntity = (PlaceEntity) comboBox.getSelectionModel().getSelectedItem();
         });
         return comboBox;
+    }
+
+    private void clickOnbAddPlace(){
+        bAddPlace.onActionProperty().setValue(v ->{
+            PlaceAddNewOnRegion placeAddNewOnRegion = new PlaceAddNewOnRegion();
+        });
     }
 
     public BorderPane createBorderPane() {
@@ -202,6 +213,9 @@ public class ObjectAddNewOnPlace {
         return gridPane;
     }
 
+    /**
+     * Создается объект CapacityCreateNew - это форма для подключения мощности к новому объекту.
+     */
     public void connectResourceToCapacity(){
         formAddTypeResourceToEquipmentMap = new HashMap<>();
         boxAddTypeResourceToEquipment = new VBox();
@@ -217,7 +231,7 @@ public class ObjectAddNewOnPlace {
         paneFormAddTypeResourceToEquipment.add(borderPane, 0, 1);
         paneFormAddTypeResourceToEquipment.add(bAddObject, 0, 2);
         if (boxAddTypeResourceToEquipment.getChildren().size() == 0) {
-            CapacityCreateNew capacityCreateNew = new CapacityCreateNew();
+            capacityCreateNew = new CapacityCreateNew();
             boxAddTypeResourceToEquipment.getChildren().add(capacityCreateNew.createFormAddTypeCapacityToObject());
             formAddTypeResourceToEquipmentMap.put(boxAddTypeResourceToEquipment.getChildren().size() - 1, capacityCreateNew);
         }
@@ -230,7 +244,7 @@ public class ObjectAddNewOnPlace {
             int i = boxAddTypeResourceToEquipment.getChildren().size();
             if (i > 0) {
                 // как блин удалить панель которая была создана циклом???
-                // при удалении панели вылетает nullException потомучто я просто удаленую панель объвляю nullом
+                // при удалении панели вылетает nullException потому что я просто удаленую панель объвляю nullом
                 boxAddTypeResourceToEquipment.getChildren().remove(i - 1);
                 try{
                 formAddTypeResourceToEquipmentMap.get(i - 1).setGridPane(null);
@@ -241,42 +255,6 @@ public class ObjectAddNewOnPlace {
                 formAddTypeResourceToEquipmentMap.remove(i - 1);
             }
         });
-    }
-
-    public GridPane getPaneFormAddTypeResourceToEquipment() {
-        return paneFormAddTypeResourceToEquipment;
-    }
-
-    public void setPaneFormAddTypeResourceToEquipment(GridPane paneFormAddTypeResourceToEquipment) {
-        this.paneFormAddTypeResourceToEquipment = paneFormAddTypeResourceToEquipment;
-    }
-
-    public Button getbAddObject() {
-        return bAddObject;
-    }
-
-    public void setbAddObject(Button bAddObject) {
-        this.bAddObject = bAddObject;
-    }
-
-    public VBox getBoxAddTypeResourceToEquipment() {
-        return boxAddTypeResourceToEquipment;
-    }
-
-    public Map<Integer, CapacityCreateNew> getFormAddTypeResourceToEquipmentMap() {
-        return formAddTypeResourceToEquipmentMap;
-    }
-
-    public TextField gettNameObject() {
-        return tNameObject;
-    }
-
-    public TextField gettPlaceOnMap() {
-        return tPlaceOnMap;
-    }
-
-    public ComboBox getComboBox() {
-        return comboBox;
     }
 
 }
