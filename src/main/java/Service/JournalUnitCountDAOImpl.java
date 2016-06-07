@@ -2,26 +2,31 @@ package Service;
 
 import Forms.MainForm;
 import Forms.Object.Capacity.UnitCount.JournalCount.ValueResourceWithUnitCount;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalUnitCountEntity;
+
+import java.util.HashSet;
 import java.util.Set;
 
-public class JournalUnitCountDAOImpl{
-    public static String message = "";
+public class JournalUnitCountDAOImpl {
+    public static StringBuffer messageBuffer;
+    private Set<JournalUnitCountEntity> journalUnitCountEntities;
 
     public void writeCountToJournal(Set<ValueResourceWithUnitCount> set) {
+        messageBuffer = new StringBuffer();
         if (set.size() > 0 && !set.isEmpty()){
             int countWrite = 0;
-
+            journalUnitCountEntities = new HashSet<>();
             MainForm.session.beginTransaction();
             for(ValueResourceWithUnitCount valueResource: set){
                 JournalUnitCountEntity journalUnitCountEntity = new JournalUnitCountEntity(
                         valueResource.getCurrentCount(), MainForm.currentDate,
                         valueResource.getActInstallCountEntity(),valueResource.getValue());
-
                 if(valueResource.getJournalUnitCountEntity() == null){
                     MainForm.session.saveOrUpdate(journalUnitCountEntity);
+                    journalUnitCountEntities.add(journalUnitCountEntity);
                     countWrite++;
                 }else{
                     valueResource.getJournalUnitCountEntity().setCountUnit(valueResource.currentCountDouble);
@@ -32,10 +37,13 @@ public class JournalUnitCountDAOImpl{
                     valueResource.getJournalUnitCountEntityNext().setValue(nextValue);
                     MainForm.session.update(valueResource.getJournalUnitCountEntity());
                     MainForm.session.update(valueResource.getJournalUnitCountEntityNext());
+                    journalUnitCountEntities.add(valueResource.getJournalUnitCountEntity());
+                    journalUnitCountEntities.add(valueResource.getJournalUnitCountEntityNext());
                     countWrite++;
                 }
             }
-            message = "Записано " + countWrite + " показаний узлов учета из " + set.size();
+            SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(journalUnitCountEntities);
+            messageBuffer.append("Записано " + countWrite + " показаний узлов учета из " + set.size());
         }
     }
 

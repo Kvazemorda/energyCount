@@ -4,12 +4,8 @@ import Forms.MainForm;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalUnitCountEntity;
 
-public class JournalUnitCountImpl implements JournalUnitCountDAO{
+public class JournalUnitCountImpl{
 
-    @Override
-    public void writeCountToJournal() {
-
-    }
 
     public double getLastCount(JournalUnitCountEntity journalUnitCountEntity){
         String hql = "select distinct countUnit from JournalUnitCountEntity journal " +

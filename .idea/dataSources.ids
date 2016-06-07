@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="H2 - ue_db" uuid="202a6a36-241f-4502-a9b9-e5ec509394ea">
+    <database-info product="H2" version="1.4.192 (2016-05-26)" jdbc-version="4.0" driver-name="H2 JDBC Driver" driver-version="1.4.192 (2016-05-26)">
+      <identifier-quote-string>&quot;</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact"/>
+    <schema name="PUBLIC" catalog="UE_DB"/>
+    <table name="ACTINSTALLCOUNT" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="DATEINSTALL" sqlType="TIMESTAMP" precision="23" scale="10" nullable="false" jdbcType="93"/>
+      <column name="DATENEXTCALIBRATION" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="FIRSTCOUNTVALUE" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="DATECREATE" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="UNITCOUNT" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="DATEUNINSTALL" sqlType="TIMESTAMP" precision="23" scale="10" nullable="true" jdbcType="93"/>
+      <column name="LASTCOUNT" sqlType="DOUBLE" precision="17" scale="0" nullable="true" jdbcType="8"/>
+      <column name="DESCRIPTION" sqlType="CHAR" precision="2147483647" scale="0" nullable="true" jdbcType="1"/>
+      <column name="CAPACITY" sqlType="INTEGER" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfMkM2ODAzRDdfQjVCNl80NDE5XzhDN0JfQ0Y0NTRBRjVBREE2KQ==" autoIncrement="true"/>
+      <primary-key name="CONSTRAINT_34" columns="ID"/>
+      <foreign-key name="CONSTRAINT_3466" columns="CAPACITY" ref-table="CAPACITYSOURCEOBJECT" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <foreign-key name="CONSTRAINT_346" columns="UNITCOUNT" ref-table="UNITCOUNT" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <exported-key name="CONSTRAINT_89A" table="JOURNALUNITCOUNT" schema="PUBLIC" catalog="UE_DB" columns="ACTINSTALLCOUNT"/>
+      <index name="CONSTRAINT_89A_INDEX_E" unique="true" columns="ID"/>
+      <index name="CONSTRAINT_3466_INDEX_E" unique="false" columns="CAPACITY"/>
+      <index name="CONSTRAINT_346_INDEX_E" unique="false" columns="UNITCOUNT"/>
+    </table>
+    <table name="BALANCERESOURCE" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfMTkwNDQwMEJfNTk4Nl80QTBEXzlFQkZfNUU0OERFMzA3NjFGKQ==" autoIncrement="true"/>
+      <column name="CAPACITY" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="DATE" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="BALANCE" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <primary-key name="CONSTRAINT_A" columns="ID"/>
+      <foreign-key name="CONSTRAINT_A4" columns="CAPACITY" ref-table="CAPACITYSOURCEOBJECT" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+    </table>
+    <table name="CAPACITYSOURCEOBJECT" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="TYPERESOURCE" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="CAPACITY" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="SOURCE" sqlType="BOOLEAN" precision="1" scale="0" nullable="false" jdbcType="16"/>
+      <column name="CONSUMER" sqlType="BOOLEAN" precision="1" scale="0" nullable="false" jdbcType="16"/>
+      <column name="OBJECTONPLACE" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="DATEINSTALL" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="DATEUNINSTALL" sqlType="DATE" precision="8" scale="0" nullable="true" jdbcType="91"/>
+      <column name="DESCRIPTION" sqlType="CHAR" precision="2147483647" scale="0" nullable="true" jdbcType="1"/>
+      <column name="CAPACITYROOT" sqlType="INTEGER" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfNUI1RTM0NzNfQTg5OF80NTEzXzg5MDZfRDQ1QzE0NDdDMTFDKQ==" autoIncrement="true"/>
+      <column name="CONTRACT1" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="CONSTRAINT_79" columns="ID"/>
+      <foreign-key name="CONSTRAINT_7" columns="CONTRACT1" ref-table="CONTRACT1" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <foreign-key name="CONSTRAINT_E75A" columns="OBJECTONPLACE" ref-table="OBJECTONPLACE" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <foreign-key name="CONSTRAINT_E75" columns="TYPERESOURCE" ref-table="TYPERESOURCE" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <exported-key name="CONSTRAINT_3466" table="ACTINSTALLCOUNT" schema="PUBLIC" catalog="UE_DB" columns="CAPACITY"/>
+      <exported-key name="CONSTRAINT_A4" table="BALANCERESOURCE" schema="PUBLIC" catalog="UE_DB" columns="CAPACITY"/>
+      <exported-key name="CONSTRAINT_64" table="JOURNALFILL" schema="PUBLIC" catalog="UE_DB" columns="CAPACITY"/>
+      <exported-key name="CONSTRAINT_5" table="JOURNALOTHERMETHOD" schema="PUBLIC" catalog="UE_DB" columns="CAPACITY"/>
+      <index name="CONSTRAINT_64_INDEX_D" unique="true" columns="ID"/>
+      <index name="CONSTRAINT_E75A_INDEX_D" unique="false" columns="OBJECTONPLACE"/>
+      <index name="CONSTRAINT_E75_INDEX_D" unique="false" columns="TYPERESOURCE"/>
+    </table>
+    <table name="CONTRACT1" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfRDlGRjk4QzlfNTg0QV80QjVBXzkyM0NfODA5MDJGOTI2QzhCKQ==" autoIncrement="true"/>
+      <column name="CONTRACTNUMBER" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="OWNER" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="CONSTRAINT_C" columns="ID"/>
+      <foreign-key name="CONSTRAINT_CD" columns="OWNER" ref-table="OWNER" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <exported-key name="CONSTRAINT_7" table="CAPACITYSOURCEOBJECT" schema="PUBLIC" catalog="UE_DB" columns="CONTRACT1"/>
+      <exported-key name="CONSTRAINT_841" table="PLANECONTRACTVALUE" schema="PUBLIC" catalog="UE_DB" columns="CONTRACT"/>
+      <index name="CONSTRAINT_CD_INDEX_C" unique="false" columns="OWNER"/>
+      <index name="ID_index" unique="false" columns="ID"/>
+    </table>
+    <table name="JOURNALFILL" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfQkI2Q0Q2ODhfMDJCNV80MjEzX0I3QThfMTE2NDk2RTgzM0Y3KQ==" autoIncrement="true"/>
+      <column name="DATE" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="VALUE" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="CAPACITY" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="CONSTRAINT_6" columns="ID"/>
+      <foreign-key name="CONSTRAINT_64" columns="CAPACITY" ref-table="CAPACITYSOURCEOBJECT" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+    </table>
+    <table name="JOURNALOTHERMETHOD" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="DATE" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="TIMEWORK" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="VALUE" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="CAPACITY" sqlType="INTEGER" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfOEM3QTA4MzdfRTgxRl80MEZCXzlBODdfMTZCMDFEMDZGMDAwKQ==" autoIncrement="true"/>
+      <primary-key name="CONSTRAINT_54" columns="ID"/>
+      <foreign-key name="CONSTRAINT_5" columns="CAPACITY" ref-table="CAPACITYSOURCEOBJECT" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <index name="CONSTRAINT_5_INDEX_B" unique="false" columns="CAPACITY"/>
+    </table>
+    <table name="JOURNALUNITCOUNT" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfMDY0ODFFMjdfNTlDMF80NTIzX0EyNzNfOTVDODQ1MjY3NzZDKQ==" autoIncrement="true"/>
+      <column name="COUNT" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="DATECOUNT" sqlType="TIMESTAMP" precision="23" scale="10" nullable="false" jdbcType="93"/>
+      <column name="VALUE" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="ACTINSTALLCOUNT" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="CONSTRAINT_89" columns="ID"/>
+      <foreign-key name="CONSTRAINT_89A" columns="ACTINSTALLCOUNT" ref-table="ACTINSTALLCOUNT" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <index name="CONSTRAINT_89A_INDEX_F" unique="false" columns="ACTINSTALLCOUNT"/>
+    </table>
+    <table name="LEGALFORM" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfNUI3OEE5M0ZfODRDQV80NzM4XzhGQ0FfQjJDOTU3RDUwODExKQ==" autoIncrement="true"/>
+      <column name="NAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="FULLNAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <primary-key name="CONSTRAINT_2" columns="ID"/>
+      <exported-key name="CONSTRAINT_481F" table="OWNER" schema="PUBLIC" catalog="UE_DB" columns="LEGALFORM"/>
+      <index name="CONSTRAINT_481F_INDEX_6" unique="true" columns="ID"/>
+    </table>
+    <table name="OBJECTONPLACE" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfMjdFQjE0MERfRDc2MV80QkNDXzk4MTBfNTcyMjIzRTY5N0JDKQ==" autoIncrement="true"/>
+      <column name="NAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="PLACE" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="NUMBONMAP" sqlType="CHAR" precision="2147483647" scale="0" nullable="true" jdbcType="1"/>
+      <column name="DATECREATE" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="DELETEOBJECT" sqlType="BOOLEAN" precision="1" scale="0" nullable="true" jdbcType="16"/>
+      <primary-key name="CONSTRAINT_3" columns="ID"/>
+      <foreign-key name="CONSTRAINT_38" columns="PLACE" ref-table="PLACE" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <exported-key name="CONSTRAINT_E75A" table="CAPACITYSOURCEOBJECT" schema="PUBLIC" catalog="UE_DB" columns="OBJECTONPLACE"/>
+      <index name="CONSTRAINT_549_INDEX_4" unique="true" columns="ID"/>
+      <index name="CONSTRAINT_38_INDEX_4" unique="false" columns="PLACE"/>
+    </table>
+    <table name="OWNER" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="NAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfRkNFRjc2QUJfNjVBNF80ODU3X0JGMUZfODlFMjI5NURFMkYzKQ==" autoIncrement="true"/>
+      <column name="INN" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="KPP" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="FULLNAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="LEGALFORM" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="CONSTRAINT_481" columns="ID"/>
+      <foreign-key name="CONSTRAINT_481F" columns="LEGALFORM" ref-table="LEGALFORM" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <exported-key name="CONSTRAINT_CD" table="CONTRACT1" schema="PUBLIC" catalog="UE_DB" columns="OWNER"/>
+    </table>
+    <table name="PLACE" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfMTZBNkQ5M0FfQkIzQ180MDVBXzg2NUJfQjJDRTI3MzU2MkM1KQ==" autoIncrement="true"/>
+      <column name="REGION" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="NAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <primary-key name="CONSTRAINT_4" columns="ID"/>
+      <foreign-key name="CONSTRAINT_48" columns="REGION" ref-table="REGION" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <exported-key name="CONSTRAINT_38" table="OBJECTONPLACE" schema="PUBLIC" catalog="UE_DB" columns="PLACE"/>
+      <exported-key name="CONSTRAINT_4D4" table="USERS" schema="PUBLIC" catalog="UE_DB" columns="PLACE"/>
+    </table>
+    <table name="PLANECONTRACTVALUE" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfMTVENzMxRTJfNDE0NF80QjkxXzk5ODFfMDA0M0M2N0RGQ0M1KQ==" autoIncrement="true"/>
+      <column name="VALUE" sqlType="DOUBLE" precision="17" scale="0" nullable="false" jdbcType="8"/>
+      <column name="DATE" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <column name="CONTRACT" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="DATEEND" sqlType="DATE" precision="8" scale="0" nullable="false" jdbcType="91"/>
+      <primary-key name="CONSTRAINT_84" columns="ID"/>
+      <foreign-key name="CONSTRAINT_841" columns="CONTRACT" ref-table="CONTRACT1" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+    </table>
+    <table name="REGION" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfOTRCMDQ4ODdfNDJBNl80MjJCX0IzNUVfNTIwODJFNEU1N0JDKQ==" autoIncrement="true"/>
+      <column name="NAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <primary-key name="CONSTRAINT_8" columns="ID"/>
+      <exported-key name="CONSTRAINT_48" table="PLACE" schema="PUBLIC" catalog="UE_DB" columns="REGION"/>
+    </table>
+    <table name="TYPERESOURCE" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfQzRENzExMzdfOEE4OV80NEM1XzkzNjBfQTE0QkNCQTBCNUQzKQ==" autoIncrement="true"/>
+      <column name="NAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="RESOURCEROOT" sqlType="INTEGER" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="CONSTRAINT_B" columns="ID"/>
+      <exported-key name="CONSTRAINT_E75" table="CAPACITYSOURCEOBJECT" schema="PUBLIC" catalog="UE_DB" columns="TYPERESOURCE"/>
+    </table>
+    <table name="UNITCOUNT" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfMDM0RTM5NTdfN0I5M180QTdBX0IzMUJfMEFCQjBCQzlDQkExKQ==" autoIncrement="true"/>
+      <column name="NUMBER" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="MODEL" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="DELETEDUNITCOUNT" sqlType="BOOLEAN" precision="1" scale="0" nullable="true" jdbcType="16"/>
+      <primary-key name="CONSTRAINT_8A" columns="ID"/>
+      <exported-key name="CONSTRAINT_346" table="ACTINSTALLCOUNT" schema="PUBLIC" catalog="UE_DB" columns="UNITCOUNT"/>
+      <index name="CONSTRAINT_346_INDEX_8" unique="true" columns="ID"/>
+    </table>
+    <table name="USERS" schema="PUBLIC" catalog="UE_DB" type="TABLE">
+      <column name="ID" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4" def="KE5FWFQgVkFMVUUgRk9SIFBVQkxJQy5TWVNURU1fU0VRVUVOQ0VfQjk0NUZENERfQkVBRl80QkZFX0FENDBfNkZFMzNGRjZBMzk4KQ==" autoIncrement="true"/>
+      <column name="NAME" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="MAIL" sqlType="CHAR" precision="2147483647" scale="0" nullable="false" jdbcType="1"/>
+      <column name="PLACE" sqlType="INTEGER" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="USERNAMEPC" sqlType="CHAR" precision="2147483647" scale="0" nullable="true" jdbcType="1"/>
+      <primary-key name="CONSTRAINT_4D" columns="ID"/>
+      <foreign-key name="CONSTRAINT_4D4" columns="PLACE" ref-table="PLACE" ref-schema="PUBLIC" ref-catalog="UE_DB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <index name="CONSTRAINT_4D4_INDEX_6" unique="false" columns="PLACE"/>
+    </table>
+  </data-source>
+</component>

@@ -2,6 +2,7 @@ package Service;
 
 import Forms.MainForm;
 import Forms.Service.DialogWindow;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
@@ -36,6 +37,7 @@ public class TypeResourceDAOImpl implements TypeResourceDAO {
             }else{
                 MainForm.session.beginTransaction();
                 MainForm.session.saveOrUpdate(typeResourceEntity);
+                SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(typeResourceEntity);
                 MainForm.session.getTransaction().commit();
                 String s = "Ресурс " + typeResourceEntity.getName() + " сохранен";
                 DialogWindow dialogWindow = new DialogWindow(s);

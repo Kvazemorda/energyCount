@@ -1,11 +1,12 @@
 package vankor.EnergyDepartment.WriteDataUnitCountToJournal;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "JOURNALUNITCOUNT", schema = "PUBLIC", catalog = "UE_DB")
-public class JournalUnitCountEntity implements Comparable {
+public class JournalUnitCountEntity implements Comparable, Serializable {
     private int id;
     private double countUnit, value;
     private Date dateCount;
@@ -42,7 +43,7 @@ public class JournalUnitCountEntity implements Comparable {
         this.countUnit = countUnit;
     }
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATECOUNT", nullable = false, insertable = true, updatable = true)
     public Date getDateCount() {
         return dateCount;

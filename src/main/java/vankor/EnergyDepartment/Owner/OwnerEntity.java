@@ -1,11 +1,12 @@
 package vankor.EnergyDepartment.Owner;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "Owner")
-public class OwnerEntity {
+public class OwnerEntity implements Serializable{
     int id;
     String name, inn, kpp, fullName;
     Set<ContractEntity> contractEntitySet;

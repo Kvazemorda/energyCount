@@ -49,9 +49,7 @@ public class LegalFormAddNew {
         commitLegalFormButton.onMouseClickedProperty().setValue(v ->{
             if(!nameTF.getText().isEmpty()){
                 if(!fullNameTF.getText().isEmpty()){
-                    LegalFormEntity legalFormEntity = new LegalFormEntity();
-                    legalFormEntity.setName(nameTF.getText());
-                    legalFormEntity.setFullName(fullNameTF.getText());
+                    LegalFormEntity legalFormEntity = new LegalFormEntity(nameTF.getText(), fullNameTF.getText());
                     LegalDAOImpl legalDAO = new LegalDAOImpl();
                     legalDAO.saveLegalForm(legalFormEntity);
                     OwnerAddNew.setLegalFormEntityComboBox();

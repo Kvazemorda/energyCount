@@ -1,5 +1,6 @@
 package Forms.Owner;
 
+import Forms.Object.Capacity.CapacityCreateNew;
 import Forms.Owner.PlaneContract.PlaneContractAddNew;
 import Forms.Service.DialogWindow;
 import Service.ContractDAOImpl;
@@ -84,7 +85,7 @@ public class ContractAddNew {
                         contractEntity.setOwnerEntity(owner);
                         ContractDAOImpl contractDAO = new ContractDAOImpl();
                         contractDAO.commitNewContract(contractEntity);
-                        //CapacityCreateNew.contractEntityComboBox();
+                        CapacityCreateNew.contractEntityComboBox();
                     }else{
                         DialogWindow dialogWindow = new DialogWindow("Выбери контрагента");
                     }

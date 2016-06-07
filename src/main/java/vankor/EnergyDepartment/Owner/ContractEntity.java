@@ -3,11 +3,12 @@ package vankor.EnergyDepartment.Owner;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "CONTRACT1", schema = "PUBLIC", catalog = "UE_DB")
-public class ContractEntity {
+public class ContractEntity implements Serializable{
     private int id;
     private String contract;
     private OwnerEntity ownerEntity;

@@ -1,11 +1,12 @@
 package vankor.EnergyDepartment.WriteDataUnitCountToJournal;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "REGION", schema = "PUBLIC", catalog = "UE_DB")
-public class RegionEntity {
+public class RegionEntity implements Serializable{
     private int id;
     private String name;
     private Set<PlaceEntity> placesById;

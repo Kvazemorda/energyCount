@@ -4,14 +4,22 @@ import Forms.Object.Capacity.UnitCount.JournalCount.JournalAddNewCountOrValue;
 import Forms.Object.CapacityConnectToObject;
 import Forms.Object.ObjectAddNewOnPlace;
 import Forms.Owner.ContractAddNew;
+import Forms.Service.DialogWindow;
+import Forms.Service.FirstSet;
+import Forms.Users.UserAddNew;
 import Service.HibernateSessionFactory;
+import Service.Messages.CheckMail;
+import Service.Messages.MyExchangeService;
 import Service.UsersDAOImp;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -49,39 +57,58 @@ public class MainForm extends Application{
     private Map<TreeItem<String>, Tab> mapTabs;
     public static DatePicker datePicker;
     public static Button updateFormsButton;
+    public static Boolean outlookIsConnected = false;
+    public static MyExchangeService myExchangeService;
+    public static ImageView outlookConnectIcon;
+
+
 
     public static void main(String[] args) {
-        System.out.println("start Hibernate");
-        MainForm.session = HibernateSessionFactory.getSessionFactory().openSession();
-        UsersDAOImp usersDAOImp = new UsersDAOImp();
-        UsersEntity usersEntity;
-        usersEntity = usersDAOImp.getCurrentUser(System.getProperty("user.name"));
-        if (usersEntity != null){
-            launch(args);
-            MainForm.session.close();
-            HibernateSessionFactory.shutdown();
-        }
+            //start Hibernate
+            MainForm.session = HibernateSessionFactory.getSessionFactory().openSession();
 
-        String s = "2. Решить как сделать общий баланс за текущий месяц \n" +
-                "3. Решить вопрос по сведению баланса в день, по РВСам и по дням когда добавляются по НПР \n" +
-                "4. Продумать логику по закрытию периода на перед или случаев корректировки показаний \n" +
-                "4.2.1 Если за текущую дату период счтается закрытым, то исправлять показание запрещено \n" +
-                "4.2.2 Посчитать по среднему: Если закрываем показание на перед, добавить форму расчета по среднему. \n" +
-                "Указываешь дату по какую необходимо посчитать и нажимаешь расчет. Вносятся средние показания за текущий месяц \n" +
-                "кроме налива воды контрагентам(по наливу воды указывается 0) \n" +
-                "3. Добавить кнопку на сохранение показаний всех узлов учета и проектных \n " +
-                "4. Добавить ДАО на сохранение данных в базе по показаниям узлов учета \n " +
-                "5. Добавить базу договоров и контрагентов \n" +
-                "6. Добавить привязку объекта к договору \n" +
-                "7. Добавить привязку налива воды к договору \n" +
-                "5. Сделать шаблон формирования справок за период \n" +
-                "6. Сделать шаблон формирования актов выполненных работ за период \n" +
-                "7. Сделать шаблон справки для формирования на определенный период \n" +
-                "8. Сделать отправку данных через почту, для сохранения данных у всех пользователей \n " +
-                "9. Собрать всю базу данных узлов и объектов. \n " +
-                "10. Внедрить прогу :-)";
-        System.out.println(s);
+            UsersDAOImp usersDAOImp = new UsersDAOImp();
+            UsersEntity usersEntity;
+            usersEntity = usersDAOImp.getCurrentUser(System.getProperty("user.name"));
+
+            myExchangeService = new MyExchangeService();
+
+            Thread thread = new Thread(new CheckMail(myExchangeService.service));
+            thread.setDaemon(true);
+            thread.start();
+
+            // check has user into dataBase
+            if (usersEntity != null) {
+                launch(args);
+                MainForm.session.close();
+                HibernateSessionFactory.shutdown();
+            }
+            String s =
+                    "\n Сделать форму привязки всех мощностей" +
+                    "\n Сделать выборку сетей по источнику" +
+                    "\n При первом запуске вывести настрйку почты и провести сериализацию из почты " +
+                    "\n Если нет пользователя то вывести сообщение о том что вы не зарегистрированны и обратитесь по эл. почте" +
+                    "\n При запуске программы провести сериализацию из почты " +
+                    "\n В классе serializableAndSendMail изменить имя пользователя на user.name" +
+                    "\n Собрать сети водоснабжения водоотведения " +
+                    "\n Тестировать сети по отчету ЦТВС " +
+                    "\n Добавить в поле настроек дату формирования отчета " +
+                    "\n Сделать шаблон формирования справок за период " +
+                    "\n Сделать шаблон формирования актов выполненных работ за период " +
+                    "\n Внедрить прогу :-)";
+
+                   /*
+                   Version 2.0
+                    1. Если почта не подключается то сделать отметку что почта не подключена и все сохранения пометить как не отправленные.
+                    2. После подклчения почты сделать отправку всех не сохраненных элементов.
+                    3. Если за текущую дату период счтается закрытым, то исправлять показание запрещено
+
+                    " Не использовать объемы в показаниях узла учета, для расчета объемов. Считать объем через разница показаний \n" +
+                    "сегодняшнего от предыдущего отчета \n";*/
+
+            System.out.println(s);
     }
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -99,14 +126,34 @@ public class MainForm extends Application{
     }
 
     /**
-     * Верхнее меню. Не задействовано
+     * Верхнее меню
      * @return MenuBar
      */
     private MenuBar createTopMenu(){
         menuBar = new MenuBar();
         Menu menu = new Menu("About");
+        MenuItem menuItem = new MenuItem("Настройки почты");
+        Menu set = new Menu("Настройки");
+        Menu addNewUser = new Menu("Добавить нового пользователя");
+        set.getItems().add(menuItem);
+        set.getItems().add(addNewUser);
+        menuBar.getMenus().add(set);
         menuBar.getMenus().add(menu);
+
+        menuItem.onActionProperty().setValue(v ->{
+            FirstSet firstSet = new FirstSet();
+        });
+        addNewUser.onActionProperty().setValue(v->{
+            UserAddNew userAddNew = new UserAddNew();
+        });
+       // checkConnectedToOutlook();
         return menuBar;
+    }
+
+    private void checkConnectedToOutlook(){
+        if (outlookIsConnected == false){
+            FirstSet firstSet = new FirstSet();
+        }
     }
 
     /**
@@ -115,16 +162,28 @@ public class MainForm extends Application{
      */
     private BorderPane createBorderPane(){
         updateFormsButton = new Button("",new ImageView("file:src/main/Icons/updates.png"));
+        outlookConnectIcon = new ImageView("file:src/main/Icons/disconnect.png");
+        outlookConnectIcon.setY(-10);
+        HBox bottomHBox = new HBox(outlookConnectIcon);
+        bottomHBox.setSpacing(10);
+        bottomHBox.setPadding(new Insets(0,10,0,0));
+        bottomHBox.setAlignment(Pos.BASELINE_RIGHT);
+        if(MainForm.outlookIsConnected == false){
+            outlookConnectIcon.setImage(new Image("file:src/main/Icons/disconnect.png"));
+        }else{
+            outlookConnectIcon.setImage(new Image("file:src/main/Icons/connected-128.png"));
+        }
         HBox hBox = new HBox();
         HBox hBoxMenu = new HBox();
         hBoxMenu.getChildren().add(createDatePicker());
-    //    hBoxMenu.getChildren().add(updateFormsButton);
         hBoxMenu.getChildren().add(createTopMenu());
         hBox.getChildren().add(createTreeView());
         borderPane = new BorderPane();
         borderPane.setTop(hBoxMenu);
         borderPane.setLeft(hBox);
         borderPane.setCenter(tabPane);
+        borderPane.setBottom(bottomHBox);
+        borderPane.setAlignment(bottomHBox, Pos.BASELINE_RIGHT);
         return borderPane;
     }
 
@@ -225,4 +284,15 @@ public class MainForm extends Application{
         return currentDate;
     }
 
+    /**
+     * Если почта отключается то меняется иконка в углу окна
+     */
+    public static void setOutlookIsConnected(){
+        if(MainForm.outlookIsConnected == false){
+            outlookConnectIcon.setImage(new Image("file:src/main/Icons/disconnect.png"));
+            DialogWindow dialogWindow = new DialogWindow("Почта отключена");
+        }else{
+            outlookConnectIcon.setImage(new Image("file:src/main/Icons/connected-128.png"));
+        }
+    }
 }

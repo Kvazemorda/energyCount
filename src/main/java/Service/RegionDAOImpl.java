@@ -2,6 +2,7 @@ package Service;
 
 import Forms.MainForm;
 import Forms.Service.DialogWindow;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.RegionEntity;
 
@@ -24,6 +25,7 @@ public class RegionDAOImpl {
         }else{
             MainForm.session.beginTransaction();
             MainForm.session.saveOrUpdate(regionEntity);
+            SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(regionEntity);
             MainForm.session.getTransaction().commit();
             String s = "Регион " + regionEntity.getName() + " сохранен";
             DialogWindow dialogWindow = new DialogWindow(s);

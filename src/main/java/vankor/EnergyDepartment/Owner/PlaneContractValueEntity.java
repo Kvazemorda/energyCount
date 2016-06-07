@@ -1,11 +1,12 @@
 package vankor.EnergyDepartment.Owner;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "planecontractvalue")
-public class PlaneContractValueEntity {
+public class PlaneContractValueEntity implements Serializable {
     int id;
     double value;
     Date dateStart, dateEnd;

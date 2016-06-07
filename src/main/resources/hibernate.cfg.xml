@@ -28,6 +28,7 @@
       <mapping class="vankor.EnergyDepartment.Owner.PlaneContractValueEntity"/>
       <mapping class="vankor.EnergyDepartment.CapacitySourceObjectEntity"/>
       <mapping class="vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalFillEntity"/>
+      <mapping class="vankor.EnergyDepartment.BalanceResourceEntity"/>
 
   </session-factory>
 </hibernate-configuration>

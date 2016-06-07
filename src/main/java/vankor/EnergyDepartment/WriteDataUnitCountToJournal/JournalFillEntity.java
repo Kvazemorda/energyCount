@@ -3,11 +3,12 @@ package vankor.EnergyDepartment.WriteDataUnitCountToJournal;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "JOURNALFILL", schema = "PUBLIC", catalog = "UE_DB")
-public class JournalFillEntity {
+public class JournalFillEntity implements Serializable {
     int id;
     Date date;
     double value;

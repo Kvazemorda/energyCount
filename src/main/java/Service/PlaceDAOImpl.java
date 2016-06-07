@@ -2,6 +2,7 @@ package Service;
 
 import Forms.MainForm;
 import Forms.Service.DialogWindow;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Session;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
 
@@ -26,6 +27,7 @@ public class PlaceDAOImpl implements PlaceDAO {
     public void commitPlace(PlaceEntity placeEntity){
             MainForm.session.beginTransaction();
             MainForm.session.saveOrUpdate(placeEntity);
+            SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(placeEntity);
             MainForm.session.getTransaction().commit();
             String s = "Площадка " + placeEntity.getName() + " сохранен";
             DialogWindow dialogWindow = new DialogWindow(s);

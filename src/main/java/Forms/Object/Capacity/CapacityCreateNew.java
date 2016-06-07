@@ -31,11 +31,13 @@ public class CapacityCreateNew {
     private Label labelTypeResource, labelCapacity, labelSource, labelConsumer, labelDescription, labelContract;
     private TypeResourceEntity typeResourceEntity;
     private PlaceEntity placeEntity;
-    private ContractEntity contractEntity;
-    private ComboBox<ContractEntity> contractEntityComboBox;
+    private static ContractEntity contractEntity;
+    private static ComboBox<ContractEntity> contractEntityComboBox;
     private Button addNewTypeResourceButton;
 
     public GridPane createFormAddTypeCapacityToObject(){
+        typeResourceEntityComboBox = new ComboBox<>();
+        typeResourceEntity = new TypeResourceEntity();
         addNewTypeResourceButton = new Button("+");
         clickAddNewTypeResourceButton();
         contractEntityComboBox = new ComboBox<>();
@@ -77,10 +79,9 @@ public class CapacityCreateNew {
     }
 
     public ComboBox<TypeResourceEntity> createComboBoxResource(){
-        typeResourceEntityComboBox = new ComboBox<>();
-        typeResourceEntity = new TypeResourceEntity();
-        final TypeResourceDAOImpl typeResourceDAO = new TypeResourceDAOImpl();
+        TypeResourceDAOImpl typeResourceDAO = new TypeResourceDAOImpl();
         ArrayList<TypeResourceEntity> listTypeResource = (ArrayList) typeResourceDAO.findAllTypeResource();
+        typeResourceEntityComboBox.getItems().clear();
         typeResourceEntityComboBox.setItems(FXCollections.observableArrayList(listTypeResource));
         return typeResourceEntityComboBox;
     }
@@ -93,12 +94,11 @@ public class CapacityCreateNew {
         return capacitySourceObjectEntityComboBox;
     }
 
-    public void contractEntityComboBox(){
+    public static void contractEntityComboBox(){
         ContractDAOImpl contractDAO = new ContractDAOImpl();
         contractEntityComboBox.setItems(FXCollections.observableArrayList(contractDAO.getAllContracts()));
         contractEntityComboBox.onActionProperty().setValue(event -> {
             contractEntity = contractEntityComboBox.getSelectionModel().getSelectedItem();
-            System.out.println(contractEntity);
         });
     }
 
@@ -110,7 +110,7 @@ public class CapacityCreateNew {
 
     public void clickAddNewTypeResourceButton(){
         addNewTypeResourceButton.onActionProperty().setValue(v ->{
-            TypeResourceAddNew typeResourceAddNew = new TypeResourceAddNew();
+            TypeResourceAddNew typeResourceAddNew = new TypeResourceAddNew(this);
         });
     }
     public CheckBox getCheckBoxConsumer() {

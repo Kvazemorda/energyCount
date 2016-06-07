@@ -20,10 +20,12 @@ import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalUnitCountEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.UnitCountEntity.UnitCountEntity;
 
+import java.io.Serializable;
+
 /**
  * Клас создает Пнель с данными узла учета и полем для ввода показаний УУ
  */
-public class ValueResourceWithUnitCount implements Comparable{
+public class ValueResourceWithUnitCount implements Comparable, Serializable{
 
     public UnitCountEntity unitCountEntity;
     private Label model, number, labelPreviewCount, labelValue, labelDescription, labelNextCount;

@@ -3,13 +3,15 @@ package vankor.EnergyDepartment.WriteDataUnitCountToJournal;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "TYPERESOURCE", schema = "PUBLIC", catalog = "UE_DB")
-public class TypeResourceEntity implements Comparable{
+public class TypeResourceEntity implements Comparable, Serializable{
     private int id;
     private String name;
+    private TypeResourceEntity typeResourceEntity;
     private Set<CapacitySourceObjectEntity> CEEREntities;
 
     public TypeResourceEntity() {
@@ -17,6 +19,11 @@ public class TypeResourceEntity implements Comparable{
 
     public TypeResourceEntity(String name) {
         this.name = name;
+    }
+
+    public TypeResourceEntity(String name, TypeResourceEntity typeResourceEntity) {
+        this.name = name;
+        this.typeResourceEntity = typeResourceEntity;
     }
 
     @Id
@@ -83,5 +90,15 @@ public class TypeResourceEntity implements Comparable{
         }else {
             return 0;
         }
+    }
+
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    public TypeResourceEntity getTypeResourceEntity() {
+        return typeResourceEntity;
+    }
+
+    public void setTypeResourceEntity(TypeResourceEntity typeResourceEntity) {
+        this.typeResourceEntity = typeResourceEntity;
     }
 }

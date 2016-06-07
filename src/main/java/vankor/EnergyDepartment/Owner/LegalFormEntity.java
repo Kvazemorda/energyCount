@@ -1,16 +1,22 @@
 package vankor.EnergyDepartment.Owner;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "legalForm")
-public class LegalFormEntity {
+public class LegalFormEntity implements Serializable{
     int id;
     String name, fullName;
     Set<OwnerEntity> ownerEntitySet;
 
     public LegalFormEntity() {
+    }
+
+    public LegalFormEntity(String name, String fullName) {
+        this.name = name;
+        this.fullName = fullName;
     }
 
     @Id

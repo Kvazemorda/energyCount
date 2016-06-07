@@ -35,7 +35,8 @@ public class ValueResourceWithoutUnitCount {
         tfWorkHours.setMaxWidth(35);
         tfWorkHours.setAlignment(Pos.TOP_CENTER);
         tfWorkHours.setStyle("-fx-padding: 4px,4px;");
-        hBox1 = new HBox(new Label("Производительность "), new Label(capacitySourceObjectEntity.getCapacity() + " в час"));
+        hBox1 = new HBox(new Label(capacitySourceObjectEntity.getDescription() + "-"), new Label(capacitySourceObjectEntity.getCapacity() + " в час"));
+        hBox1.setSpacing(2);
         hBox1.setStyle("-fx-padding: 5");
         labelDescription = new Label(capacitySourceObjectEntity.getContractEntity().toString());
         labelDescription.setStyle("-fx-padding: 5");

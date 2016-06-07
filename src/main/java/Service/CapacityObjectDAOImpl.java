@@ -1,6 +1,7 @@
 package Service;
 
 import Forms.MainForm;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
@@ -74,13 +75,17 @@ public class CapacityObjectDAOImpl {
     public void connectCapacityToObject(CapacitySourceObjectEntity capacitySourceObjectEntity){
         MainForm.session.beginTransaction();
         MainForm.session.saveOrUpdate(capacitySourceObjectEntity);
+        SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(capacitySourceObjectEntity);
         MainForm.session.getTransaction().commit();
+
     }
 
     public void disconnectCapacityFromObject(CapacitySourceObjectEntity capacitySourceObjectEntity){
         MainForm.session.beginTransaction();
         MainForm.session.saveOrUpdate(capacitySourceObjectEntity);
+        SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(capacitySourceObjectEntity);
         MainForm.session.getTransaction().commit();
+
     }
 
 

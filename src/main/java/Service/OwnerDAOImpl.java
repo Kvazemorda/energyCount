@@ -2,6 +2,7 @@ package Service;
 
 import Forms.MainForm;
 import Forms.Service.DialogWindow;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.Owner.OwnerEntity;
 
@@ -19,6 +20,7 @@ public class OwnerDAOImpl {
     public void saveOwner(OwnerEntity ownerEntity){
         MainForm.session.beginTransaction();
         MainForm.session.save(ownerEntity);
+        SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(ownerEntity);
         MainForm.session.getTransaction().commit();
         DialogWindow dialogWindow = new DialogWindow("Потребитель " + ownerEntity + " сохранен");
     }

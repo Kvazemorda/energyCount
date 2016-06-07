@@ -6,12 +6,13 @@ import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalOtherMethodEnt
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "CAPACITYSOURCEOBJECT", schema = "PUBLIC", catalog = "UE_DB")
-public class CapacitySourceObjectEntity implements Comparable {
+public class CapacitySourceObjectEntity implements Comparable, Serializable {
     private int id;
     private double capacity;
     private TypeResourceEntity typeResourceEntity;
@@ -23,6 +24,8 @@ public class CapacitySourceObjectEntity implements Comparable {
     private Date dateInstall, dateUnInstall;
     private String description;
     private ContractEntity contractEntity;
+    private Set<BalanceResourceEntity> balanceResourceEntity;
+    private Set<CapacitySourceObjectEntity> rootCapacity;
 
     public CapacitySourceObjectEntity() {
     }
@@ -141,6 +144,16 @@ public class CapacitySourceObjectEntity implements Comparable {
         this.contractEntity = contractEntity;
     }
 
+    @ManyToMany
+    @JoinColumn(name = "CapacityRoot", referencedColumnName = "id", nullable = true)
+    public Set<CapacitySourceObjectEntity> getRootCapacity() {
+        return rootCapacity;
+    }
+
+    public void setRootCapacity(Set<CapacitySourceObjectEntity> rootCapacity) {
+        this.rootCapacity = rootCapacity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -158,8 +171,6 @@ public class CapacitySourceObjectEntity implements Comparable {
         if (dateUnInstall != null ? !dateUnInstall.equals(that.dateUnInstall) : that.dateUnInstall != null)
             return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (journalOtherMethodEntities != null ? !journalOtherMethodEntities.equals(that.journalOtherMethodEntities) : that.journalOtherMethodEntities != null)
-            return false;
         if (objectOnPlaceEntity != null ? !objectOnPlaceEntity.equals(that.objectOnPlaceEntity) : that.objectOnPlaceEntity != null)
             return false;
         if (source != null ? !source.equals(that.source) : that.source != null) return false;
@@ -177,7 +188,6 @@ public class CapacitySourceObjectEntity implements Comparable {
         result = (int) (temp ^ (temp >>> 32));
         result = 31 * result + (typeResourceEntity != null ? typeResourceEntity.hashCode() : 0);
         result = 31 * result + (actInstallCountEntities != null ? actInstallCountEntities.hashCode() : 0);
-        result = 31 * result + (journalOtherMethodEntities != null ? journalOtherMethodEntities.hashCode() : 0);
         result = 31 * result + (source != null ? source.hashCode() : 0);
         result = 31 * result + (consumer != null ? consumer.hashCode() : 0);
         result = 31 * result + (objectOnPlaceEntity != null ? objectOnPlaceEntity.hashCode() : 0);
@@ -206,7 +216,7 @@ public class CapacitySourceObjectEntity implements Comparable {
         return this.getObjectOnPlaceEntity().getName().compareTo(capacitySourceObjectEntity.getObjectOnPlaceEntity().getName());
     }
 
-    @OneToMany(mappedBy = "capacitySourceObjectEntity", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "capacitySourceObjectEntity", cascade = CascadeType.ALL)
     public Set<ActInstallCountEntity> getActInstallCountEntities() {
         return actInstallCountEntities;
     }
@@ -215,12 +225,21 @@ public class CapacitySourceObjectEntity implements Comparable {
         this.actInstallCountEntities = actInstallCountEntities;
     }
 
-    @OneToMany(mappedBy = "capacitySourceObjectEntity", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "capacitySourceObjectEntity", cascade = CascadeType.ALL)
     public Set<JournalOtherMethodEntity> getJournalOtherMethodEntities() {
         return journalOtherMethodEntities;
     }
 
     public void setJournalOtherMethodEntities(Set<JournalOtherMethodEntity> journalOtherMethodEntities) {
         this.journalOtherMethodEntities = journalOtherMethodEntities;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "capacitySourceObjectEntity", cascade = CascadeType.ALL)
+    public Set<BalanceResourceEntity> getBalanceResourceEntity() {
+        return balanceResourceEntity;
+    }
+
+    public void setBalanceResourceEntity(Set<BalanceResourceEntity> balanceResourceEntity) {
+        this.balanceResourceEntity = balanceResourceEntity;
     }
 }

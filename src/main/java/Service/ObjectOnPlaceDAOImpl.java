@@ -1,7 +1,8 @@
 package Service;
 
-import Forms.Service.DialogWindow;
 import Forms.MainForm;
+import Forms.Service.DialogWindow;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.PlaceEntity;
@@ -46,8 +47,8 @@ public class ObjectOnPlaceDAOImpl implements ObjectOnPlaceDAO {
     public void saveObjectOnPlace(ObjectOnPlaceEntity objectOnPlaceEntity){
         MainForm.session.beginTransaction();
         MainForm.session.saveOrUpdate(objectOnPlaceEntity);
+        SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(objectOnPlaceEntity);
         MainForm.session.getTransaction().commit();
-
         String message = "Объект " + objectOnPlaceEntity.getName() + " добавлен";
         DialogWindow dialogWindow = new DialogWindow(message);
     }
@@ -55,6 +56,7 @@ public class ObjectOnPlaceDAOImpl implements ObjectOnPlaceDAO {
     public void deleteObjectOnPlace(ObjectOnPlaceEntity objectOnPlaceEntity){
         MainForm.session.beginTransaction();
         MainForm.session.saveOrUpdate(objectOnPlaceEntity);
+        SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(objectOnPlaceEntity);
         MainForm.session.getTransaction().commit();
 
         String message = "Объект " + objectOnPlaceEntity.getName() + " удален";

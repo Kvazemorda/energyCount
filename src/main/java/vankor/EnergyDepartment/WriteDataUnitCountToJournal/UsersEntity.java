@@ -1,15 +1,26 @@
 package vankor.EnergyDepartment.WriteDataUnitCountToJournal;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "USERS", schema = "PUBLIC", catalog = "UE_DB")
-public class UsersEntity{
+public class UsersEntity implements Serializable{
     private int id;
     private String name;
     private String mail;
     private PlaceEntity placeEntity;
     private String userName;
+
+    public UsersEntity() {
+    }
+
+    public UsersEntity(String name, String mail, PlaceEntity placeEntity, String userName) {
+        this.name = name;
+        this.mail = mail;
+        this.placeEntity = placeEntity;
+        this.userName = userName;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

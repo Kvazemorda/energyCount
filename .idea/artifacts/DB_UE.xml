@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="DB_UE">
+    <output-path>$PROJECT_DIR$/out/artifacts/DB_UE</output-path>
+    <root id="root">
+      <element id="archive" name="DB_UE.jar">
+        <element id="module-output" name="DB_UE" />
+      </element>
+    </root>
+  </artifact>
+</component>

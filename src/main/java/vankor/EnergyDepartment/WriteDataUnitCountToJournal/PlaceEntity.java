@@ -3,12 +3,13 @@ package vankor.EnergyDepartment.WriteDataUnitCountToJournal;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Entity
 @Table(name = "PLACE", schema = "PUBLIC", catalog = "UE_DB")
-public class PlaceEntity {
+public class PlaceEntity implements Serializable {
     private int id;
     private String name;
     private Set<ObjectOnPlaceEntity> objectOnPlacesById = new TreeSet<ObjectOnPlaceEntity>();

@@ -3,11 +3,12 @@ package vankor.EnergyDepartment.WriteDataUnitCountToJournal.UnitCountEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "UNITCOUNT", schema = "PUBLIC", catalog = "UE_DB")
-public class UnitCountEntity implements Comparable{
+public class UnitCountEntity implements Comparable, Serializable{
     private int id;
     private String number;
     private String model;
@@ -84,7 +85,7 @@ public class UnitCountEntity implements Comparable{
         return result;
     }
 
-    @OneToMany(mappedBy = "unitCountByUnitCount", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "unitCountByUnitCount", cascade = CascadeType.ALL)
     public Set<ActInstallCountEntity> getActInstallCountsById() {
         return this.actInstallCountsById;
     }

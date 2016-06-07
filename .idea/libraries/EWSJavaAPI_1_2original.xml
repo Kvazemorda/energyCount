@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="EWSJavaAPI_1.2original">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/EWS/EWSJavaAPI_1.2original.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

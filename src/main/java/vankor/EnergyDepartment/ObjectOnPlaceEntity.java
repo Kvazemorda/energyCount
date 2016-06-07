@@ -3,12 +3,13 @@ package vankor.EnergyDepartment;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "OBJECTONPLACE", schema = "PUBLIC", catalog = "UE_DB")
-public class ObjectOnPlaceEntity {
+public class ObjectOnPlaceEntity implements Serializable{
     private int id;
     private String name;
     private String numbOnMap;

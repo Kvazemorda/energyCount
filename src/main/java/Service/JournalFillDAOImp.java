@@ -2,35 +2,34 @@ package Service;
 
 import Forms.MainForm;
 import Forms.Object.Capacity.UnitCount.JournalCount.ValueResourceZeroCapacity;
-import Forms.Service.DialogWindow;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalFillEntity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class JournalFillDAOImp {
+    private Set<JournalFillEntity> journalFillEntities = new HashSet<>();
 
     public void writeCountToJournal(Set<ValueResourceZeroCapacity> set){
         if (set.size() > 0 && !set.isEmpty()){
+            MainForm.session.beginTransaction();
             int countWrite = 0;
             for(ValueResourceZeroCapacity valueResource: set){
                 if(getCurrentJournal(valueResource.getCapacitySourceObjectEntity()) != null ){
                     getCurrentJournal(valueResource.getCapacitySourceObjectEntity()).setValue(valueResource.valueOfPeriod);
                     MainForm.session.update(getCurrentJournal(valueResource.getCapacitySourceObjectEntity()));
+                    journalFillEntities.add(getCurrentJournal(valueResource.getCapacitySourceObjectEntity()));
                 }else{
                     MainForm.session.saveOrUpdate(valueResource.getJournalFillEntity());
+                    journalFillEntities.add(getCurrentJournal(valueResource.getCapacitySourceObjectEntity()));
                 }
             }
-            MainForm.session.getTransaction().commit();
             countWrite++;
-            StringBuffer stringBuffer = new StringBuffer(JournalUnitCountDAOImpl.message);
-            stringBuffer.append("\n Записано " + countWrite + " объемов по факту отпуска " + set.size() + " подключенных");
-            DialogWindow dialogWindow = new DialogWindow(stringBuffer.toString());
-        }else{
-            if (JournalUnitCountDAOImpl.message != ""){
-                DialogWindow dialogWindow = new DialogWindow(JournalUnitCountDAOImpl.message);
-            }
+            SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(journalFillEntities);
+            JournalUnitCountDAOImpl.messageBuffer.append("\nЗаписано " + countWrite + " объемов по факту отпуска " + set.size() + " подключенных");
         }
     }
 

@@ -2,6 +2,7 @@ package Service;
 
 import Forms.MainForm;
 import Forms.Service.DialogWindow;
+import Service.Messages.SerializableAndSendMail;
 import org.hibernate.Query;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.UnitCountEntity.UnitCountEntity;
 
@@ -36,12 +37,14 @@ public class UnitCountDAOImpl {
     public void saveUnitCount(UnitCountEntity unitCountEntity){
         MainForm.session.getTransaction().begin();
         MainForm.session.saveOrUpdate(unitCountEntity);
+        SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(unitCountEntity);
         MainForm.session.getTransaction().commit();
         DialogWindow dialogWindow = new DialogWindow("Узел учета добавлен");
     }
     public void deleteUnitCount(UnitCountEntity unitCountEntity){
         MainForm.session.getTransaction().begin();
         MainForm.session.update(unitCountEntity);
+        SerializableAndSendMail serializableAndSendMail = new SerializableAndSendMail(unitCountEntity);
         MainForm.session.getTransaction().commit();
         DialogWindow dialogWindow = new DialogWindow("Узел учета удален");
     }

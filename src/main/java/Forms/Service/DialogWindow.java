@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -15,8 +16,8 @@ import javafx.stage.StageStyle;
 public class DialogWindow {
     private String message;
     protected Group root;
-    protected Stage stage;
-    protected Scene scene;
+    public Stage stage;
+    public Scene scene;
     protected BorderPane borderPane;
     protected VBox vBox;
 
@@ -45,9 +46,9 @@ public class DialogWindow {
         stage.resizableProperty().setValue(false);
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
-
 
 }

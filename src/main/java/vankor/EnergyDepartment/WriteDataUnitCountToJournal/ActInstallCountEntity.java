@@ -4,12 +4,13 @@ import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.UnitCountEntity.UnitCountEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "ACTINSTALLCOUNT", schema = "PUBLIC", catalog = "UE_DB")
-public class ActInstallCountEntity implements Comparable{
+public class ActInstallCountEntity implements Comparable, Serializable{
     private int id;
     private Date dateInstall;
     private Date dateNextCalibration;
@@ -55,7 +56,7 @@ public class ActInstallCountEntity implements Comparable{
         Description = description;
     }
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATEINSTALL", nullable = false, insertable = true, updatable = true)
     public Date getDateInstall() {
         return dateInstall;
@@ -149,7 +150,7 @@ public class ActInstallCountEntity implements Comparable{
 
         return this.dateInstall.compareTo(actInstallCountEntity.dateInstall);
     }
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATEUNINSTALL", nullable = true, insertable = true, updatable = true)
     public Date getDateUnInstall() {
         return dateUnInstall;
@@ -177,7 +178,7 @@ public class ActInstallCountEntity implements Comparable{
     public void setCapacitySourceObjectEntity(CapacitySourceObjectEntity capacitySourceObjectEntity) {
         this.capacitySourceObjectEntity = capacitySourceObjectEntity;
     }
-    @OneToMany(mappedBy = "actInstallCountEntity", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "actInstallCountEntity", cascade = CascadeType.ALL)
     public Set<JournalUnitCountEntity> getJournalUnitCountEntitySet() {
         return journalUnitCountEntitySet;
     }

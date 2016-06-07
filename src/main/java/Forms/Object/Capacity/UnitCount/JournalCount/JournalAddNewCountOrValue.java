@@ -2,6 +2,7 @@ package Forms.Object.Capacity.UnitCount.JournalCount;
 
 import Forms.MainForm;
 import Forms.Object.ObjectWithResourceConnected;
+import Forms.Service.DialogWindow;
 import Service.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -46,6 +47,11 @@ public class JournalAddNewCountOrValue {
         borderPane.setCenter(centerGridPane());
         borderPane.setBottom(vBoxBalance);
         borderPane.setAlignment(vBoxBalance, Pos.BOTTOM_CENTER);
+
+        valueOtherMethod = new HashSet<>();
+        valueUnitCount = new HashSet<>();
+        valueResourceZero = new HashSet<>();
+
         changeDate();
         return borderPane;
     }
@@ -57,6 +63,9 @@ public class JournalAddNewCountOrValue {
         listView.setItems(FXCollections.observableArrayList(typeResourceDAO.findAllTypeResource()));
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             typeResourceEntity = listView.getSelectionModel().getSelectedItem();
+            valueOtherMethod.clear();
+            valueResourceZero.clear();
+            valueUnitCount.clear();
             createObjectOnPlaceForm();
         });
         return listView;
@@ -113,9 +122,6 @@ public class JournalAddNewCountOrValue {
     //создаем формы объектов с узлами учета и без них, размещаем их в центре
     public void createObjectOnPlaceForm() {
         buttonAddNewCountListener();
-        valueOtherMethod = new HashSet<>();
-        valueUnitCount = new HashSet<>();
-        valueResourceZero = new HashSet<>();
         valueOtherMethod.clear();
         valueUnitCount.clear();
         valueResourceZero.clear();
@@ -175,14 +181,19 @@ public class JournalAddNewCountOrValue {
     }
     private void buttonAddNewCountListener(){
         buttonAddNewCount.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
-            JournalUnitCountDAOImpl journalUnitCountDAO = new JournalUnitCountDAOImpl();
-            journalUnitCountDAO.writeCountToJournal(valueUnitCount);
-            JournalFillDAOImp journalFillDAOImp = new JournalFillDAOImp();
-            journalFillDAOImp.writeCountToJournal(valueResourceZero);
-            JournalOtherMethodDAOImpl journalOtherMethodDAO = new JournalOtherMethodDAOImpl();
-            journalOtherMethodDAO.writeValueToJournal(valueOtherMethod);
+            if(!labelBalanceResource.getText().equals("0.0")){
+                DialogWindow dialogWindow = new DialogWindow("Баланс должен быть равен 0");
+            }else{
+                JournalUnitCountDAOImpl journalUnitCountDAO = new JournalUnitCountDAOImpl();
+                journalUnitCountDAO.writeCountToJournal(valueUnitCount);
+                JournalFillDAOImp journalFillDAOImp = new JournalFillDAOImp();
+                journalFillDAOImp.writeCountToJournal(valueResourceZero);
+                JournalOtherMethodDAOImpl journalOtherMethodDAO = new JournalOtherMethodDAOImpl();
+                journalOtherMethodDAO.writeValueToJournal(valueOtherMethod);
+            }
         });
     }
+
     public void changeDate(){
         MainForm.datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             createObjectOnPlaceForm();
