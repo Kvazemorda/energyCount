@@ -144,9 +144,9 @@ public class JournalAddNewCountOrValue {
             if (objectWithResourceConnected.capacitySourceConnect == true){
                 boxSource.getChildren().add(borderPaneSource);
             }
-            borderPaneConsumer = objectWithResourceConnected.createObjectWithResourceConsumer();
+//            borderPaneConsumer = objectWithResourceConnected.createObjectWithResourceConsumer();
             if (objectWithResourceConnected.capacityConsumerConnect == true){
-                boxConsumer.getChildren().add(borderPaneConsumer);
+                boxConsumer.getChildren().add(objectWithResourceConnected.borderPaneConsumer);
             }
         }
     }

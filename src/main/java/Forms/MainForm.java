@@ -1,5 +1,6 @@
 package Forms;
 
+import Forms.Object.Capacity.CapacityNetWork;
 import Forms.Object.Capacity.UnitCount.JournalCount.JournalAddNewCountOrValue;
 import Forms.Object.CapacityConnectToObject;
 import Forms.Object.ObjectAddNewOnPlace;
@@ -21,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -49,15 +51,16 @@ public class MainForm extends Application{
     private Scene scene;
     private BorderPane borderPane;
     public TabPane tabPane;
-    private Tab tabReports, tabReportsCTVS, tabAddNewObject, tabConnectObjectByResource, tabAddNewContract;
+    private Tab tabReports, tabReportsCTVS, tabAddNewObject, tabConnectObjectByResource, tabAddNewContract, tabCreateNetWork;
     private MenuBar menuBar;
-    private String reports, reportCTVS, addNewObject, connectObjectToResource, addNewContract;
+    private String reports, reportCTVS, addNewObject, connectObjectToResource, addNewContract, createNetWork;
     public static JournalAddNewCountOrValue journalAddNewCountOrValue;
-    private static TreeItem<String> treeReports, treeReportCTVS, treeItemAddNewObject, treeItemConnectObjByResource, treeAddNewContract;
+    private static TreeItem<String> treeReports, treeReportCTVS, treeItemAddNewObject, treeItemConnectObjByResource,
+            treeAddNewContract, treeCreateNetWork;
     private Map<TreeItem<String>, Tab> mapTabs;
     public static DatePicker datePicker;
     public static Button updateFormsButton;
-    public static Boolean outlookIsConnected = false;
+    public static Boolean outlookIsConnected = true;
     public static MyExchangeService myExchangeService;
     public static ImageView outlookConnectIcon;
 
@@ -84,8 +87,12 @@ public class MainForm extends Application{
                 HibernateSessionFactory.shutdown();
             }
             String s =
-                    "\n Сделать форму привязки всех мощностей" +
-                    "\n Сделать выборку сетей по источнику" +
+                    "\n Добавить Enum видов отчетов " +
+                            "\n Привязать Enum к ресурсам " +
+                            "\n При Открытии отчета ЦТВС сделать грид из всех видов ресорсов отчета " +
+                            "\n В каждый грид внести источинки и потребители " +
+                            "\n Свод объема по каждому ресурсу и свод баланса от Root до самого низжешго " +
+                    "\n Сделать форму привязки потребителя к ресурсу " +
                     "\n При первом запуске вывести настрйку почты и провести сериализацию из почты " +
                     "\n Если нет пользователя то вывести сообщение о том что вы не зарегистрированны и обратитесь по эл. почте" +
                     "\n При запуске программы провести сериализацию из почты " +
@@ -108,7 +115,6 @@ public class MainForm extends Application{
 
             System.out.println(s);
     }
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -168,6 +174,7 @@ public class MainForm extends Application{
         bottomHBox.setSpacing(10);
         bottomHBox.setPadding(new Insets(0,10,0,0));
         bottomHBox.setAlignment(Pos.BASELINE_RIGHT);
+        bottomHBox.setBackground(Background.EMPTY);
         if(MainForm.outlookIsConnected == false){
             outlookConnectIcon.setImage(new Image("file:src/main/Icons/disconnect.png"));
         }else{
@@ -198,17 +205,20 @@ public class MainForm extends Application{
         treeItemAddNewObject = new TreeItem(tabAddNewObject.getText());
         treeItemConnectObjByResource = new TreeItem(tabConnectObjectByResource.getText());
         treeAddNewContract = new TreeItem(tabAddNewContract.getText());
+        treeCreateNetWork = new TreeItem<>(tabCreateNetWork.getText());
         mapTabs = new HashMap<>();
         mapTabs.put(treeReports, tabReports);
         mapTabs.put(treeReportCTVS, tabReportsCTVS);
         mapTabs.put(treeItemAddNewObject, tabAddNewObject);
         mapTabs.put(treeItemConnectObjByResource, tabConnectObjectByResource);
         mapTabs.put(treeAddNewContract, tabAddNewContract);
+        mapTabs.put(treeCreateNetWork, tabCreateNetWork);
         treeReports.setExpanded(true);
         treeReports.getChildren().add(0,treeReportCTVS);
         treeReports.getChildren().add(1,treeItemAddNewObject);
         treeReports.getChildren().add(2,treeItemConnectObjByResource);
         treeReports.getChildren().add(3,treeAddNewContract);
+        treeReports.getChildren().add(4, treeCreateNetWork);
         final TreeView<TreeItem> treeView = new TreeView(treeReports);
         treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<TreeItem>>() {
             @Override
@@ -244,12 +254,14 @@ public class MainForm extends Application{
         addNewObject = "Создать новый объект";
         connectObjectToResource = "Подкл./откл. ресурс к объекту";
         addNewContract = "Добавить новый договор";
+        createNetWork = "Соединяем сети";
         tabPane = new TabPane();
         tabReports = new Tab(reports);
         tabReportsCTVS = new Tab(reportCTVS);
         tabConnectObjectByResource = new Tab(connectObjectToResource);
         tabAddNewObject = new Tab(addNewObject);
         tabAddNewContract = new Tab(addNewContract);
+        tabCreateNetWork = new Tab(createNetWork);
         journalAddNewCountOrValue = new JournalAddNewCountOrValue();
         ObjectAddNewOnPlace objectAddNewOnPlace = new ObjectAddNewOnPlace();
         CapacityConnectToObject capacityConnectToObject = new CapacityConnectToObject();
@@ -259,6 +271,8 @@ public class MainForm extends Application{
         tabConnectObjectByResource.setContent(capacityConnectToObject.createCapacityConnectToObject());
         ContractAddNew contractAddNew = new ContractAddNew();
         tabAddNewContract.setContent(contractAddNew.getBorderPaneBasicForm());
+        CapacityNetWork capacityNetWork = new CapacityNetWork();
+        tabCreateNetWork.setContent(capacityNetWork.getBorderPane());
         return tabPane;
     }
 

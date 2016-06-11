@@ -13,7 +13,7 @@ import java.util.List;
 public class CapacityObjectDAOImpl {
 
     public List<CapacitySourceObjectEntity> getCapacityOnPlaceConnectedResource(PlaceEntity placeEntity, TypeResourceEntity typeResourceEntity){
-        String hql = "select capacity from CapacitySourceObjectEntity capacity " +
+       String hql = "select capacity from CapacitySourceObjectEntity capacity " +
                 "where capacity.typeResourceEntity = :resource " +
                 "and  capacity.objectOnPlaceEntity = (select objectOnPlace from ObjectOnPlaceEntity objectOnPlace " +
                 "where objectOnPlace.placeByPlace = :place)";
@@ -40,7 +40,7 @@ public class CapacityObjectDAOImpl {
 
     public List<CapacitySourceObjectEntity> getCapacityResourceConnectedToObjectSource(ObjectOnPlaceEntity objectOnPlaceEntity,
                                                                                TypeResourceEntity typeResourceEntity){
-        String hql = "select distinct capacityResource from CapacitySourceObjectEntity  capacityResource " +
+       /* String hql = "select distinct capacityResource from CapacitySourceObjectEntity  capacityResource " +
                 "where capacityResource.objectOnPlaceEntity = :objectOnPlace " +
                 "and capacityResource.dateInstall <= :today and (capacityResource.dateUnInstall > :today " +
                 "or capacityResource.dateUnInstall is null) " +
@@ -51,7 +51,20 @@ public class CapacityObjectDAOImpl {
         query.setParameter("objectOnPlace", objectOnPlaceEntity);
         query.setParameter("today", MainForm.currentDate);
         query.setParameter("typeResource", typeResourceEntity);
+        */
+        String hql1 = "select distinct capacityResource from CapacitySourceObjectEntity  capacityResource " +
+                "where capacityResource.objectOnPlaceEntity = :objectOnPlace " +
+                "and capacityResource.dateInstall <= :today and (capacityResource.dateUnInstall > :today " +
+                "or capacityResource.dateUnInstall is null) " +
+                "and capacityResource.typeResourceEntity = :typeResource " +
+                "and capacityResource.capacitySource is null";
+
+        Query query = MainForm.session.createQuery(hql1);
+        query.setParameter("objectOnPlace", objectOnPlaceEntity);
+        query.setParameter("today", MainForm.currentDate);
+        query.setParameter("typeResource", typeResourceEntity);
         List<CapacitySourceObjectEntity> list = query.list();
+
         return list;
 
     }
@@ -72,6 +85,7 @@ public class CapacityObjectDAOImpl {
         return list;
     }
 
+
     public void connectCapacityToObject(CapacitySourceObjectEntity capacitySourceObjectEntity){
         MainForm.session.beginTransaction();
         MainForm.session.saveOrUpdate(capacitySourceObjectEntity);
@@ -87,6 +101,4 @@ public class CapacityObjectDAOImpl {
         MainForm.session.getTransaction().commit();
 
     }
-
-
 }

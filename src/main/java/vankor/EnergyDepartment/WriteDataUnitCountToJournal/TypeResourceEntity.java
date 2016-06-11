@@ -13,6 +13,7 @@ public class TypeResourceEntity implements Comparable, Serializable{
     private String name;
     private TypeResourceEntity typeResourceEntity;
     private Set<CapacitySourceObjectEntity> CEEREntities;
+    private TypeReport typeReport;
 
     public TypeResourceEntity() {
     }

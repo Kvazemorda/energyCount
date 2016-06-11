@@ -1,7 +1,7 @@
 package vankor.EnergyDepartment;
 
-import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity;
 import vankor.EnergyDepartment.Owner.ContractEntity;
+import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.JournalOtherMethodEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
 
@@ -25,7 +25,8 @@ public class CapacitySourceObjectEntity implements Comparable, Serializable {
     private String description;
     private ContractEntity contractEntity;
     private Set<BalanceResourceEntity> balanceResourceEntity;
-    private Set<CapacitySourceObjectEntity> rootCapacity;
+    private Set<CapacitySourceObjectEntity> capacityConsumer;
+    private CapacitySourceObjectEntity capacitySource;
 
     public CapacitySourceObjectEntity() {
     }
@@ -144,16 +145,6 @@ public class CapacitySourceObjectEntity implements Comparable, Serializable {
         this.contractEntity = contractEntity;
     }
 
-    @ManyToMany
-    @JoinColumn(name = "CapacityRoot", referencedColumnName = "id", nullable = true)
-    public Set<CapacitySourceObjectEntity> getRootCapacity() {
-        return rootCapacity;
-    }
-
-    public void setRootCapacity(Set<CapacitySourceObjectEntity> rootCapacity) {
-        this.rootCapacity = rootCapacity;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -241,5 +232,22 @@ public class CapacitySourceObjectEntity implements Comparable, Serializable {
 
     public void setBalanceResourceEntity(Set<BalanceResourceEntity> balanceResourceEntity) {
         this.balanceResourceEntity = balanceResourceEntity;
+    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "capacitySource", cascade = CascadeType.ALL)
+    public Set<CapacitySourceObjectEntity> getCapacityConsumer() {
+        return capacityConsumer;
+    }
+
+    public void setCapacityConsumer(Set<CapacitySourceObjectEntity> capacityConsumer) {
+        this.capacityConsumer = capacityConsumer;
+    }
+    @ManyToOne
+    @JoinColumn(name = "CapacityRoot", referencedColumnName = "ID", nullable = false)
+    public CapacitySourceObjectEntity getCapacitySource() {
+        return capacitySource;
+    }
+
+    public void setCapacitySource(CapacitySourceObjectEntity capacitySource) {
+        this.capacitySource = capacitySource;
     }
 }

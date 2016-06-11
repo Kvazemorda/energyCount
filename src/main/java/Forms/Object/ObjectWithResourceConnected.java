@@ -16,8 +16,10 @@ import vankor.EnergyDepartment.CapacitySourceObjectEntity;
 import vankor.EnergyDepartment.ObjectOnPlaceEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.ActInstallCountEntity;
 import vankor.EnergyDepartment.WriteDataUnitCountToJournal.TypeResourceEntity;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Клас создает два BorderPane (Источник и Потребитель) с данными об узлах учета и с кнопкой
@@ -36,6 +38,7 @@ public class ObjectWithResourceConnected {
             capacityConsumerConnect = false;
     public static String cssDefault;
     private ArrayList<CapacitySourceObjectEntity> sourceObjectEntities, consumerObjectEntities;
+    public BorderPane borderPaneConsumer;
 
     public ObjectWithResourceConnected(TypeResourceEntity typeResourceEntity, ObjectOnPlaceEntity objectOnPlaceEntity) {
         this.typeResourceEntity = typeResourceEntity;
@@ -66,7 +69,7 @@ public class ObjectWithResourceConnected {
         objectBorderPane.setStyle(cssDefault);
         return objectBorderPane;
     }
-    public BorderPane createObjectWithResourceConsumer() {
+    public BorderPane createObjectWithResourceConsumer(CapacitySourceObjectEntity capacitySourceObjectEntity) {
         Label label = new Label(objectOnPlaceEntity.getName());
         label.setStyle("-fx-padding: 5px");
         BorderPane borderPaneTop = new BorderPane();
@@ -74,12 +77,13 @@ public class ObjectWithResourceConnected {
         borderPaneTop.setRight(buttonConsumer);
         borderPaneTop.setStyle("-fx-padding: 6");
         unitCountConsumerBox.getChildren().clear();
-        createCapacityConsumerConnectedByObject();
-        BorderPane objectBorderPane = new BorderPane();
-        objectBorderPane.setTop(borderPaneTop);
-        objectBorderPane.setCenter(unitCountConsumerBox);
-        objectBorderPane.setStyle(cssDefault);
-        return objectBorderPane;
+       // createCapacityConsumerConnectedByObject();
+        createCapacityConsumerConnectedByObject(capacitySourceObjectEntity);
+        borderPaneConsumer = new BorderPane();
+        borderPaneConsumer.setTop(borderPaneTop);
+        borderPaneConsumer.setCenter(unitCountConsumerBox);
+        borderPaneConsumer.setStyle(cssDefault);
+        return borderPaneConsumer;
     }
 // unitCountSourceBox заполняется узлами учета если на текущую дату есть действующий акт ввода УУ
     public void createCapacitySourceConnectedByObject() {
@@ -100,6 +104,7 @@ public class ObjectWithResourceConnected {
                 JournalAddNewCountOrValue.valueUnitCount.add(unitCountItem);
             }else{if(capacitySourceObjectEntity.getCapacity() > 0 ){
                 ValueResourceWithoutUnitCount valueResourceWithoutUnitCount = new ValueResourceWithoutUnitCount(capacitySourceObjectEntity);
+                //отмечаем что это форма источника и она будет отображаться слева в источнике
                 valueResourceWithoutUnitCount.source = true;
                 unitCountSourceBox.getChildren().add(valueResourceWithoutUnitCount.createForm());
                 JournalAddNewCountOrValue.valueOtherMethod.add(valueResourceWithoutUnitCount);
@@ -110,36 +115,36 @@ public class ObjectWithResourceConnected {
                 unitCountSourceBox.getChildren().add(valueResourceZeroCapacity.createForm());
                 JournalAddNewCountOrValue.valueResourceZero.add(valueResourceZeroCapacity);
 
+                }
             }
-            }
+            createObjectWithResourceConsumer(capacitySourceObjectEntity);
         }
     }
 
-    public void createCapacityConsumerConnectedByObject() {
-        CapacityObjectDAOImpl capacityObjectDAO = new CapacityObjectDAOImpl();
-        List<CapacitySourceObjectEntity> capacitySourceObjectEntitySet = capacityObjectDAO.getCapacityResourceConnectedToObjectConsumer(objectOnPlaceEntity, typeResourceEntity);
-        if (capacitySourceObjectEntitySet.size() > 0){
+    public void createCapacityConsumerConnectedByObject(CapacitySourceObjectEntity capacitySourceObjectEntity) {
+        Set<CapacitySourceObjectEntity> capacityConsumerObjectEntities = capacitySourceObjectEntity.getCapacityConsumer();
+        if (capacityConsumerObjectEntities.size() > 0){
             capacityConsumerConnect = true;
         }
-        for (CapacitySourceObjectEntity capacitySourceObjectEntity : capacitySourceObjectEntitySet) {
+        for (CapacitySourceObjectEntity capacityConsumerObjectEntity : capacityConsumerObjectEntities) {
             ActInstallUnitCountDAOImp actInstallUnitCountDAOImp = new ActInstallUnitCountDAOImp();
-            ActInstallCountEntity actInstallCountEntity = actInstallUnitCountDAOImp.getActInstallCount(capacitySourceObjectEntity);
-            ValueResourceWithUnitCount unitCountItem = new ValueResourceWithUnitCount(capacitySourceObjectEntity);
+            ActInstallCountEntity actInstallCountEntity = actInstallUnitCountDAOImp.getActInstallCount(capacityConsumerObjectEntity);
+            ValueResourceWithUnitCount unitCountItem = new ValueResourceWithUnitCount(capacityConsumerObjectEntity);
             if (actInstallCountEntity != null){
                 unitCountItem.setUnitCountEntity(actInstallCountEntity.getUnitCountByUnitCount());
                 unitCountConsumerBox.getChildren().add(unitCountItem.createPaneUnitCount());
                 JournalAddNewCountOrValue.valueUnitCount.add(unitCountItem);
-            }else{if(capacitySourceObjectEntity.getCapacity() > 0 ){
-                ValueResourceWithoutUnitCount valueResourceWithoutUnitCount = new ValueResourceWithoutUnitCount(capacitySourceObjectEntity);
+            }else{if(capacityConsumerObjectEntity.getCapacity() > 0 ){
+                ValueResourceWithoutUnitCount valueResourceWithoutUnitCount = new ValueResourceWithoutUnitCount(capacityConsumerObjectEntity);
                 unitCountConsumerBox.getChildren().add(valueResourceWithoutUnitCount.createForm());
                 JournalAddNewCountOrValue.valueOtherMethod.add(valueResourceWithoutUnitCount);
-                consumerObjectEntities.add(capacitySourceObjectEntity);
-                }else{
-                ValueResourceZeroCapacity valueResourceZeroCapacity = new ValueResourceZeroCapacity(capacitySourceObjectEntity);
+                consumerObjectEntities.add(capacityConsumerObjectEntity);
+            }else{
+                ValueResourceZeroCapacity valueResourceZeroCapacity = new ValueResourceZeroCapacity(capacityConsumerObjectEntity);
                 valueResourceZeroCapacity.source = false;
                 unitCountConsumerBox.getChildren().add(valueResourceZeroCapacity.createForm());
                 JournalAddNewCountOrValue.valueResourceZero.add(valueResourceZeroCapacity);
-            }
+                }
             }
         }
     }

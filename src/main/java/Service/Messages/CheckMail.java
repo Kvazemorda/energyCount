@@ -39,7 +39,6 @@ public class CheckMail implements Runnable{
         try {
             PullSubscription subscription = service.subscribeToPullNotifications(folder,1,null, EventType.NewMail);
             MainForm.outlookIsConnected = true;
-            MainForm.setOutlookIsConnected();
             while (true){
                 eventsResults = subscription.getEvents();
                 for(ItemEvent event: eventsResults.getItemEvents()){
